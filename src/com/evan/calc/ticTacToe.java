@@ -3,11 +3,7 @@ package com.evan.calc;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-
-import java.util.ArrayList;
 import java.util.Random;
-
-import javax.swing.*;
 
 public class ticTacToe extends JPanel implements ActionListener {
 	public static void main(String args[]) {
@@ -28,58 +24,49 @@ public class ticTacToe extends JPanel implements ActionListener {
 	JPanel panelTwo = new JPanel();
 	JPanel panelThree = new JPanel();
 	
-	
 	//initializes JButtons
-	JButton buttonOne = new JButton("1");
-	JButton buttonTwo = new JButton("2");
-	JButton buttonThree = new JButton("3");
-	JButton buttonFour = new JButton("4");
-	JButton buttonFive = new JButton("5");
-	JButton buttonSix = new JButton("6");
-	JButton buttonSeven = new JButton("7");
-	JButton buttonEight = new JButton("8");
-	JButton buttonNine = new JButton("9");
+	ButtonArray buttonArray = new ButtonArray();
 	
 	//creates Position Arrays
 	PositionArray userArray = new PositionArray();
 	PositionArray computerArray = new PositionArray();
 	
-	private Font bSize40 = new Font("Arial", Font.PLAIN, 40);
+	private Font bSize40 = new Font("Arial", Font.PLAIN, 40); //font size for the button
+	int gameTurns = 0; //number of times the user selects a button
 	
 	public ticTacToe(){
+		
+		//assigns three buttons to panel one
 		panelOne.setLayout( new GridLayout(1,3));
-		buttonOne.addActionListener(this);
-		panelOne.add(buttonOne);
-		buttonTwo.addActionListener(this);
-		panelOne.add(buttonTwo);
-		buttonThree.addActionListener(this);
-		panelOne.add(buttonThree);
+		(buttonArray.getButton(0)).addActionListener(this);
+		panelOne.add(buttonArray.getButton(0));
+		buttonArray.getButton(1).addActionListener(this);
+		panelOne.add(buttonArray.getButton(1));
+		buttonArray.getButton(2).addActionListener(this);
+		panelOne.add(buttonArray.getButton(2));
 		
+		//assigns three buttons to panel two
 		panelTwo.setLayout( new GridLayout(1,3));
-		buttonFour.addActionListener(this);
-		panelTwo.add(buttonFour);
-		buttonFive.addActionListener(this);
-		panelTwo.add(buttonFive);
-		buttonSix.addActionListener(this);
-		panelTwo.add(buttonSix);
+		buttonArray.getButton(3).addActionListener(this);
+		panelTwo.add(buttonArray.getButton(3));
+		buttonArray.getButton(4).addActionListener(this);
+		panelTwo.add(buttonArray.getButton(4));
+		buttonArray.getButton(5).addActionListener(this);
+		panelTwo.add(buttonArray.getButton(5));
 		
+		//assigns three buttons to panel three
 		panelThree.setLayout( new GridLayout(1,3));
-		buttonSeven.addActionListener(this);
-		panelThree.add(buttonSeven);
-		buttonEight.addActionListener(this);
-		panelThree.add(buttonEight);
-		buttonNine.addActionListener(this);
-		panelThree.add(buttonNine);
+		buttonArray.getButton(6).addActionListener(this);
+		panelThree.add(buttonArray.getButton(6));
+		buttonArray.getButton(7).addActionListener(this);
+		panelThree.add(buttonArray.getButton(7));
+		buttonArray.getButton(8).addActionListener(this);
+		panelThree.add(buttonArray.getButton(8));
 		
-		buttonOne.setFont(bSize40);
-		buttonTwo.setFont(bSize40);
-		buttonThree.setFont(bSize40);
-		buttonFour.setFont(bSize40);
-		buttonFive.setFont(bSize40);
-		buttonSix.setFont(bSize40);
-		buttonSeven.setFont(bSize40);
-		buttonEight.setFont(bSize40);
-		buttonNine.setFont(bSize40);
+		//sets the font size on the buttons
+		for (int i=0;i<=8;i++){
+			buttonArray.getButton(i).setFont(bSize40);
+		}
 		
 		//adds all of the rows to the frame
 		setLayout( new GridLayout(3,1));
@@ -90,91 +77,36 @@ public class ticTacToe extends JPanel implements ActionListener {
 	}
 	
 	public void actionPerformed(ActionEvent evt) {
-		int randomPosition = 0;
-		int gameTurns = 0;
+		boolean userTurn = true; //variable keeping track of whether it is the user's turn or not
+		int randomPosition = 0; //variable used by computer to randomly identify a move
 		Object source = evt.getSource(); //finds the source of the objects that triggers the event
 		
-//		if (evt.getID()==1001){
-//		System.out.println(evt.getID());
-		//		((AbstractButton) source).setText("Hello");
-		//	if (source==buttonOne){
-		//		System.out.println(((AbstractButton) source));
-		//			}
-		//		}
-		
-		
-		
-		
-		if (source==buttonOne){
-			if (userArray.contains(1)) {
-				return;
-			} else {
-				userArray.setArray(1);
-			}
-		} else if (source==buttonTwo){
-			if (userArray.contains(2)) {
-				return;
-			} else {
-				userArray.setArray(2);
-			}
-		} else if (source==buttonThree){
-			if (userArray.contains(3)) {
-				return;
-			} else {
-				userArray.setArray(3);
-			}
-		} else if (source==buttonFour){
-			if (userArray.contains(4)) {
-				return;
-			} else {
-				userArray.setArray(4);
-			}
-		} else if (source==buttonFive){
-			if (userArray.contains(5)) {
-				return;
-			} else {
-				userArray.setArray(5);
-			}
-		} else if (source==buttonSix){
-			if (userArray.contains(6)) {
-				return;
-			} else {
-				userArray.setArray(6);
-			}
-		} else if (source==buttonSeven){
-			if (userArray.contains(7)) {
-				return;
-			} else {
-				userArray.setArray(7);
-			}
-		} else if (source==buttonEight){
-			if (userArray.contains(8)) {
-				return;
-			} else {
-				userArray.setArray(8);
-			}
-		} else if (source==buttonNine){
-			if (userArray.contains(9)) {
-				return;
-			} else {
-				userArray.setArray(9);
-			}
-		}
-		
-		((AbstractButton) source).setText("X");//Sets the selected button as an 'X'
+		//when the user clicks on a JButton this code finds that button and assigns it to the positionArray for that user
+		while(userTurn==true){
+			for (int i=0;i<=8;i++){
+				if (source==buttonArray.getButton(i)){
+					if (userArray.contains(i+1)||computerArray.contains(i+1)) { //makes sure these numbers are not already in the array
+						return;
+					} else {
+						userArray.setArray(i+1);
+						userTurn=false;
+							}
+						}
+					}
+				}
+		((AbstractButton) source).setText("X");//Sets the user selected button as an 'X'
 		
 		//checks if the user wins the game
 		if (userArray.threeInARowCheck()==true){
-			JOptionPane.showMessageDialog(null, "You win!!");
-		}
-		
-		//keeps count of the number of turns in the game
-		gameTurns++;
-		if (gameTurns>=3){
-			JOptionPane.showMessageDialog(null, "Cat's game... noone wins");
+			endOfGame("You win!!");
 			return;
 		}
-		System.out.println(gameTurns);
+		//keeps count of the number of turns in the game
+		gameTurns++;
+		if (gameTurns>=5){
+			endOfGame("Cat's game... noone wins");
+			return;
+		}
 		//needs to have enemy turn go here
 		Random random = new Random();
 		randomPosition = random.nextInt(9 - 1 + 1) + 1;
@@ -182,44 +114,43 @@ public class ticTacToe extends JPanel implements ActionListener {
 			randomPosition = random.nextInt(9 - 1 + 1) + 1;	
 		}
 		//sets the computer selection to the board
-		if (randomPosition==1){
-			buttonOne.setText("O");
-			computerArray.setArray(1);
-		} else if (randomPosition==2){
-			buttonTwo.setText("O");
-			computerArray.setArray(2);
-		} else if (randomPosition==3){
-			buttonThree.setText("O");
-			computerArray.setArray(3);
-		} else if (randomPosition==4){
-			buttonFour.setText("O");
-			computerArray.setArray(4);
-		} else if (randomPosition==5){
-			buttonFive.setText("O");
-			computerArray.setArray(5);
-		} else if (randomPosition==6){
-			buttonSix.setText("O");
-			computerArray.setArray(6);
-		} else if (randomPosition==7){
-			buttonSeven.setText("O");
-			computerArray.setArray(7);
-		} else if (randomPosition==8){
-			buttonEight.setText("O");
-			computerArray.setArray(8);
-		} else if (randomPosition==9){
-			buttonNine.setText("O");
-			computerArray.setArray(9);
-		}
-		
+		buttonArray.getButton(randomPosition-1).setText("O");
+		computerArray.setArray(randomPosition);
 		//checks if the user wins the game
 		if (computerArray.threeInARowCheck()==true){
-			JOptionPane.showMessageDialog(null, "Sorry... the computer wins");
+			endOfGame("Sorry... the computer wins");
+			return;
 		}
-
 	}
 	
-//	public void assignButtonPressedToArray(integer i){
-//		if (userArray.getArray(i)==null) {
-//		}
+	//method to go through and blank out all of the buttons when called and asks if the user wants a rematch
+	public void endOfGame(String message){
+		for (int i=0;i<=8;i++){
+			buttonArray.getButton(i).setOpaque(false);
+			buttonArray.getButton(i).setContentAreaFilled(false);
+			buttonArray.getButton(i).setBorderPainted(false);
+			buttonArray.getButton(i).setEnabled(false);
+		}
+		JOptionPane.showMessageDialog(null, message);
+		int reply = JOptionPane.showConfirmDialog(null, "Play again?", "Rematch", JOptionPane.YES_NO_OPTION);
+		if (reply == JOptionPane.NO_OPTION) {
+            System.exit(0);
+        } else {
+        	restartGame();
+        }
 	}
 	
+	//a method that resets the game back to its original state
+	public void restartGame(){
+		for (int i=0;i<=8;i++){
+			buttonArray.getButton(i).setOpaque(true);
+			buttonArray.getButton(i).setContentAreaFilled(true);
+			buttonArray.getButton(i).setBorderPainted(true);
+			buttonArray.getButton(i).setEnabled(true);
+			buttonArray.getButton(i).setText("");
+		}
+		computerArray.clearArray();
+		userArray.clearArray();
+		gameTurns=0;
+	}
+}
