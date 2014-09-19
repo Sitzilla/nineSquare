@@ -125,6 +125,17 @@ public class Board extends JPanel implements ActionListener {
 			gameTurns += 1;
 			game.setGameTurns(gameTurns);
 			((AbstractButton) source).setText("X"); //Sets the user selected button as an 'X'
+		//checks if the user wins the game
+			if (game.winningArray(game.getUserArray())){
+				endOfGame("You win!!");
+				return;
+			}
+			
+			//end the game if cats game
+			if (gameTurns > 9){
+				endOfGame("Cat's game... it's a draw!");
+				return;
+			}
 			
 		//since the player has gone, this will simulater the computers move
 			game.playTheGame();
@@ -140,10 +151,53 @@ public class Board extends JPanel implements ActionListener {
 			}
 			
 			buttonArray[rowPos][columnPos].setText("O"); //Sets the user selected button as an 'O'
+		//checks if the user wins the game
+			if (game.winningArray(game.getComputerArray())){
+				endOfGame("Sorry... the computer wins");
+				return;
+			}
 			gameTurns += 1;
 			game.setGameTurns(gameTurns);
 		}
 		
 	}
 	
+	//method to go through and blank out all of the buttons when called and asks if the user wants a rematch
+	public void endOfGame(String message){
+		for (int i=0;i<ARRAYSIZE;i++){
+			for (int j=0;j<ARRAYSIZE;j++){
+			buttonArray[i][j].setOpaque(false);
+			buttonArray[i][j].setContentAreaFilled(false);
+			buttonArray[i][j].setBorderPainted(false);
+			buttonArray[i][j].setEnabled(false);
+			}
+		}
+		JOptionPane.showMessageDialog(null, message);
+		int reply = JOptionPane.showConfirmDialog(null, "Play again?", "Rematch", JOptionPane.YES_NO_OPTION);
+		if (reply == JOptionPane.NO_OPTION) {
+            System.exit(0);
+        } else {
+        	restartGame();
+        }
+	}
+	//a method that resets the game back to its original state
+	public void restartGame(){
+		for (int i=0;i<ARRAYSIZE;i++){
+			for (int j=0;j<ARRAYSIZE;j++){
+			buttonArray[i][j].setOpaque(true);
+			buttonArray[i][j].setContentAreaFilled(true);
+			buttonArray[i][j].setBorderPainted(true);
+			buttonArray[i][j].setEnabled(true);
+			buttonArray[i][j].setText("");
+		}
+			//################################################################
+			//NEED TO ENSURE FULL RESET
+			//################################################################
+		gameTurns = 1;
+		game.reset();
+//		userArray.clearArray();
+//		gameTurns=0;
+	}
+	
+}
 }

@@ -22,6 +22,8 @@ public class TicTacToeGame {
 	int randomPosition;
 	int mostRecentComputerMove;
 	
+	AIStrategy computerStrategy = new AIStrategy(false);
+	
 	TicTacToeGame(JButton[][] buttonArray){
 		this.buttonArray = buttonArray;;
 	}
@@ -32,9 +34,13 @@ public class TicTacToeGame {
 		
 		if (userTurn){
 			legalMove = manageUsersTurn(indexPosition);
+			if (legalMove){
+				computerStrategy.setUserArray(indexPosition);
+			}
+			
 		} else {
 			legalMove = manageComputersTurn(indexPosition);
-			
+			computerStrategy.setComputerArray(mostRecentComputerMove);
 		}
 		
 		return legalMove;
@@ -70,15 +76,8 @@ public class TicTacToeGame {
 	
 	//method that manages the computers move
 	public boolean manageComputersTurn(int indexPosition){
-		//needs to have enemy turn go here
-		Random random = new Random();
-		randomPosition = random.nextInt(9 - 1 + 1) + 1;
-		while (userArray.contains(randomPosition) || computerArray.contains(randomPosition)){ //checks if either array contains the selection
-			randomPosition = random.nextInt(9 - 1 + 1) + 1;	
-		}
-		
-		computerArray.add(randomPosition);
-		mostRecentComputerMove = randomPosition;
+		mostRecentComputerMove = computerStrategy.simulateMoves();
+		computerArray.add(mostRecentComputerMove);
 		return true;
 	}
 	
@@ -104,6 +103,16 @@ public class TicTacToeGame {
 		}
 	}
 	
+	//resets all of the variables in the TicTacToeGame to create a new 'instance' basically
+	public void reset(){
+		computerArray.clear();
+		userArray.clear();
+		computerStrategy.clearComputerArray();
+		computerStrategy.clearUserArray();
+		mostRecentComputerMove = 0;
+		gameTurns = 1;
+		
+	}
 	
 	//method that checks the 8 possible ways that there can be a 3 in a row.  If the array contains those three integers, it returns a 'true',
 		//otherwise it returns a 'false'
@@ -128,64 +137,6 @@ public class TicTacToeGame {
 			return false;
 		}
 	
-	//method to go through and blank out all of the buttons when called and asks if the user wants a rematch
-	public void endOfGame(String message){
-//		for (int i=0;i<=8;i++){
-//			buttonArray.getButton(i).setOpaque(false);
-//			buttonArray.getButton(i).setContentAreaFilled(false);
-//			buttonArray.getButton(i).setBorderPainted(false);
-//			buttonArray.getButton(i).setEnabled(false);
-//		}
-		JOptionPane.showMessageDialog(null, message);
-		int reply = JOptionPane.showConfirmDialog(null, "Play again?", "Rematch", JOptionPane.YES_NO_OPTION);
-		if (reply == JOptionPane.NO_OPTION) {
-            System.exit(0);
-        } else {
-        	restartGame();
-        }
-	}
 	
-	//a method that resets the game back to its original state
-	public void restartGame(){
-//		for (int i=0;i<=8;i++){
-//			buttonArray.getButton(i).setOpaque(true);
-//			buttonArray.getButton(i).setContentAreaFilled(true);
-//			buttonArray.getButton(i).setBorderPainted(true);
-//			buttonArray.getButton(i).setEnabled(true);
-//			buttonArray.getButton(i).setText("");
-//		}
-//		computerArray.clearArray();
-//		userArray.clearArray();
-//		gameTurns=0;
-	}
 	
 }
-
-//
-////checks if the user wins the game
-//if (userArray.threeInARowCheck()==true){
-//	endOfGame("You win!!");
-//	return;
-//}
-////keeps count of the number of turns in the game
-//gameTurns++;
-//if (gameTurns>=5){
-//	endOfGame("Cat's game... noone wins");
-//	return;
-//}
-////needs to have enemy turn go here
-//Random random = new Random();
-//randomPosition = random.nextInt(9 - 1 + 1) + 1;
-//while (userArray.contains(randomPosition) || computerArray.contains(randomPosition)){ //checks if either array contains the selection
-//	randomPosition = random.nextInt(9 - 1 + 1) + 1;	
-//}
-////sets the computer selection to the board
-//buttonArray.getButton(randomPosition-1).setText("O");
-//computerArray.setArray(randomPosition);
-////checks if the user wins the game
-//if (computerArray.threeInARowCheck()==true){
-//	endOfGame("Sorry... the computer wins");
-//	return;
-//}
-//
-//
