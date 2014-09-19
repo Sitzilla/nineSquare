@@ -2,6 +2,7 @@ package com.evan.calc;
 
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
 
 public class Board extends JPanel implements ActionListener {
@@ -18,6 +19,9 @@ public class Board extends JPanel implements ActionListener {
 	private Font bSize40 = new Font("Arial", Font.PLAIN, 40); //font size for the button
 	int gameTurns = 1; //number of times the user selects a button
 	boolean legalMove;
+	//creates an instance of the TicTacToeGame
+	TicTacToeGame game = new TicTacToeGame(buttonArray);
+	
 	
 	public Board(){
 		
@@ -33,16 +37,22 @@ public class Board extends JPanel implements ActionListener {
 		panelOne.setLayout( new GridLayout(1,3));
 		buttonArray[0][0].setText("0");
 		buttonArray[0][0].putClientProperty("index", 0);
+		buttonArray[0][0].putClientProperty("row", 0);
+		buttonArray[0][0].putClientProperty("column", 0);
 		buttonArray[0][0].addActionListener(this);
 		panelOne.add(buttonArray[0][0]);
 		
 		buttonArray[0][1].setText("1");
 		buttonArray[0][1].putClientProperty("index", 1);
+		buttonArray[0][0].putClientProperty("row", 0);
+		buttonArray[0][0].putClientProperty("column", 1);
 		buttonArray[0][1].addActionListener(this);
 		panelOne.add(buttonArray[0][1]);
 		
 		buttonArray[0][2].setText("2");
 		buttonArray[0][2].putClientProperty("index", 2);
+		buttonArray[0][0].putClientProperty("row", 0);
+		buttonArray[0][0].putClientProperty("column", 2);
 		buttonArray[0][2].addActionListener(this);
 		panelOne.add(buttonArray[0][2]);
 		
@@ -50,16 +60,22 @@ public class Board extends JPanel implements ActionListener {
 		panelTwo.setLayout( new GridLayout(1,3));
 		buttonArray[1][0].setText("3");
 		buttonArray[1][0].putClientProperty("index", 3);
+		buttonArray[0][0].putClientProperty("row", 1);
+		buttonArray[0][0].putClientProperty("column", 0);
 		buttonArray[1][0].addActionListener(this);
 		panelTwo.add(buttonArray[1][0]);
 
 		buttonArray[1][1].setText("4");
 		buttonArray[1][1].putClientProperty("index", 4);
+		buttonArray[0][0].putClientProperty("row", 1);
+		buttonArray[0][0].putClientProperty("column", 1);
 		buttonArray[1][1].addActionListener(this);
 		panelTwo.add(buttonArray[1][1]);
 		
 		buttonArray[1][2].setText("5");
 		buttonArray[1][2].putClientProperty("index", 5);
+		buttonArray[0][0].putClientProperty("row", 1);
+		buttonArray[0][0].putClientProperty("column", 2);
 		buttonArray[1][2].addActionListener(this);
 		panelTwo.add(buttonArray[1][2]);
 		
@@ -67,16 +83,22 @@ public class Board extends JPanel implements ActionListener {
 		panelThree.setLayout( new GridLayout(1,3));
 		buttonArray[2][0].setText("6");
 		buttonArray[2][0].putClientProperty("index", 6);
+		buttonArray[0][0].putClientProperty("row", 2);
+		buttonArray[0][0].putClientProperty("column", 0);
 		buttonArray[2][0].addActionListener(this);
 		panelThree.add(buttonArray[2][0]);
 		
 		buttonArray[2][1].setText("7");
 		buttonArray[2][1].putClientProperty("index", 7);
+		buttonArray[0][0].putClientProperty("row", 2);
+		buttonArray[0][0].putClientProperty("column", 1);
 		buttonArray[2][1].addActionListener(this);
 		panelThree.add(buttonArray[2][1]);
 
 		buttonArray[2][2].setText("8");
 		buttonArray[2][2].putClientProperty("index", 8);
+		buttonArray[0][0].putClientProperty("row", 2);
+		buttonArray[0][0].putClientProperty("column", 2);
 		buttonArray[2][2].addActionListener(this);
 		panelThree.add(buttonArray[2][2]);
 		
@@ -92,21 +114,36 @@ public class Board extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent evt) {
 		Object source = evt.getSource(); //finds the source of the objects that triggers the event
 		int indexPosition = (Integer) ((JComponent) evt.getSource()).getClientProperty("index");
-		
-		TicTacToeGame game = new TicTacToeGame(buttonArray,gameTurns, indexPosition);
+		int rowPos = 0;
+		int columnPos = 0;
+
+		game.setIndexPosition(indexPosition);
 		legalMove = game.playTheGame();
 		
 		//if selected button was a legal move then mark the button.  If not then do nothing.
 		if (legalMove){
 			gameTurns += 1;
-			
-			//mark the selected button as either 'X' or 'O'
-			if (game.designateTurn(gameTurns)){
-			((AbstractButton) source).setText("O"); //Sets the user selected button as an 'O'
-			} else {
+			game.setGameTurns(gameTurns);
 			((AbstractButton) source).setText("X"); //Sets the user selected button as an 'X'
+			
+		//since the player has gone, this will simulater the computers move
+			game.playTheGame();
+			int mostRecentComputerMove = game.getMostRecentComputerMove();
+			//matches the indexed computer move to the correct button
+			for (int i=0;i<ARRAYSIZE;i++){
+				for (int j=0;j<ARRAYSIZE;j++){
+					if ((Integer) buttonArray[i][j].getClientProperty("index") == mostRecentComputerMove){
+						rowPos = i;
+						columnPos = j;
+					}
+				}
 			}
+			
+			buttonArray[rowPos][columnPos].setText("O"); //Sets the user selected button as an 'O'
+			gameTurns += 1;
+			game.setGameTurns(gameTurns);
 		}
+		
 	}
 	
 }
