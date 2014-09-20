@@ -3,180 +3,135 @@ package com.evan.calc;
 import java.util.ArrayList;
 
 public class AIStrategy {
+	private static final int ARRAYSIZE = 9; //total of 9 positions in the array of possible moves (0 to 8)
 	
-	//creates Position Arrays
-	ArrayList<Integer> userArray = new ArrayList();
-	ArrayList<Integer> computerArray = new ArrayList();
-	ArrayList<Integer> spacesWithTokensArray = new ArrayList();
-	ArrayList<Integer> spacesWithNoTokensArray = new ArrayList();
-	ArrayList<Integer> totalMoves = new ArrayList();
+	//creates Position Arrays that hold the user's and the computer's moves thus far in the game
+	ArrayList<Integer> userArray = new ArrayList<Integer>();
+	ArrayList<Integer> computerArray = new ArrayList<Integer>();
 	
-	//calculated arrays that are recreated when the calculations are passed
-	ArrayList<Integer> calculatedUserArray = new ArrayList();
-	ArrayList<Integer> calculatedComputerArray = new ArrayList();
+	//arraylist of all possible moves on an empty board (0 through 8)
+	ArrayList<Integer> totalMoves = new ArrayList<Integer>();
 	
-	
-	
-	boolean humanPlayer;
-	boolean computerTurn;
-	
-	AIStrategy(boolean humanPlayer){
-//		this.userArray = userArray;
-//		this.computerArray = computerArray;
-		this.humanPlayer = humanPlayer;
-		totalMoves.add(0);
-		totalMoves.add(1);
-		totalMoves.add(2);
-		totalMoves.add(3);
-		totalMoves.add(4);
-		totalMoves.add(5);
-		totalMoves.add(6);
-		totalMoves.add(7);
-		totalMoves.add(8);
-//		spacesWithTokensArray = userArray;
-//		spacesWithTokensArray.addAll(computerArray);
-		
-	}
-	
-	public void setUserArray(int value){
-		spacesWithTokensArray.clear();
-		userArray.add(value);
-		spacesWithTokensArray.addAll(userArray);
-		spacesWithTokensArray.addAll(computerArray);
-	}
-	public void setComputerArray(int value){
-		spacesWithTokensArray.clear();
-		computerArray.add(value);
-		spacesWithTokensArray.addAll(userArray);
-		spacesWithTokensArray.addAll(computerArray);
-	}
+	//temporary arraylists that are used to hold MiniMax test moves
+	ArrayList<Integer> tempUserArray = new ArrayList<Integer>();
+	ArrayList<Integer> tempComputerArray = new ArrayList<Integer>();
 
+	//constructor for the class
+	AIStrategy(){
+		//creates an arraylist of all possible moves on an empty board (0 through 8)
+		for (int i = 0; i < ARRAYSIZE; i++){
+			totalMoves.add(i);
+		}
+	}
+	
+	//setter method to add moves to the user's array of moves
+	public void setUserArray(int value){
+		userArray.add(value);
+	}
+	//setter method to add moves to the computer's array of moves
+	public void setComputerArray(int value){
+		computerArray.add(value);
+	}
+	
+	//clears all of the arrays in the 'AIStrategy' class.  This is used whenever resetting the game to play again
 	public void clearAllArrays(){
 		userArray.clear();
 		computerArray.clear();
-		spacesWithTokensArray.clear();
-		calculatedUserArray.clear();
-		calculatedComputerArray.clear();
-		spacesWithNoTokensArray.clear();
+		tempUserArray.clear();
+		tempComputerArray.clear();
 	}
 	
-	public int returnBestMove(int gameTurn){
+	//method called from the 'TicTacToeGame' class that returns the 'best' move for the computer. 
+	public int returnBestMove(){
 		int[] bestMove = null;
 			
-			calculatedUserArray.addAll(userArray);
-			calculatedComputerArray.addAll(computerArray);
+			//fills these two temporary arraylists with 'base values', which is the current state of the 'Board' class whenever this method is called
+			tempUserArray.addAll(userArray);
+			tempComputerArray.addAll(computerArray);
 			
-//			tempUserArray.addAll(userArray);
-//			tempComputerArray.addAll(computerArray);
-//			tempSpacesWithTokensArray.addAll(spacesWithTokensArray);
-//			
-			//start minimax
-
+			//calls the recursive minimax search algorithm to search to a depth of 2 turns ahead
 			bestMove = minimax(2, true);
+
 			
-//			tempUserArray.clear();
-//			tempComputerArray.clear();
-//			tempSpacesWithTokensArray.clear();
-//		
+			tempUserArray.clear();
+			tempComputerArray.clear();
+			
 		return bestMove[1]; 
 	}
 	
 	//recursive Min-Max algorithm that returns an int[2] object (score, index)
 	public int[] minimax(int depth, boolean computerPlayer){
-		ArrayList<Integer> tempUserArray = new ArrayList();
-		ArrayList<Integer> tempComputerArray = new ArrayList();
-		ArrayList<Integer> tempSpacesWithTokensArray = new ArrayList();
-		ArrayList<Integer> nextMoves = new ArrayList();
-		ArrayList<Integer> possibleMoves = new ArrayList();
+		ArrayList<Integer> spacesWithTokensArray = new ArrayList<Integer>(); //array of all moves that have already been made
+		ArrayList<Integer> possibleMoves = new ArrayList<Integer>(); //array of moves available to be checked
 		
-		tempUserArray.addAll(calculatedUserArray);
-		tempComputerArray.addAll(calculatedComputerArray);
-		tempSpacesWithTokensArray.addAll(calculatedUserArray);
-		tempSpacesWithTokensArray.addAll(calculatedComputerArray);
+		spacesWithTokensArray.addAll(tempUserArray);
+		spacesWithTokensArray.addAll(tempComputerArray);
 		
 		possibleMoves.addAll(totalMoves);
-		possibleMoves.removeAll(tempSpacesWithTokensArray);
-		
-		nextMoves.addAll(possibleMoves);
+		possibleMoves.removeAll(spacesWithTokensArray);
 		
 		//minimized if human, maximized if computer
-		int bestScore = (computerPlayer) ? -100: 100;
-		int currentScore;
-		int bestIndex = -1;
-		
+		int bestScore = (computerPlayer) ? -1000: 1000; //variable that keeps track of the 'best' score returned
+		int currentScore; //variable that store the current score
+		int bestIndex = -1; //variable that holds the move associated with the 'bestScore' variable
 
-		if (depth==0 || nextMoves.isEmpty()){
-			
-//			.addAll(tempComputerArray);
-//			calculatedUserArray.addAll(tempUserArray);
-			bestScore = checkAllLinesOnTheBoard();
-//			calculatedComputerArray.clear();
-//			calculatedUserArray.clear();
+		//if there are no more available moves or if the algorithm has searched to the necessary depth
+		if (depth==0 || possibleMoves.isEmpty()){
+			bestScore = checkAllLinesOnTheBoard(); //returns a score for the moves in the 'spacesWithTokensArray' arraylist
 		} else {
-			for (int move : nextMoves){
+			//goes through and checks all possible moves in the 'possibleMoves' arraylist
+			for (int move : possibleMoves){
 				//try this move for the 'current' player
 				if (computerPlayer) { //if the computer's 'turn'
 					tempComputerArray.add(move);
-					calculatedComputerArray.add(move);
-					tempSpacesWithTokensArray.add(move);
+					spacesWithTokensArray.add(move);
 					
-					currentScore = minimax(depth-1, false)[0];
-					
+					currentScore = minimax(depth-1, false)[0]; //calls minimax recursively to the next depth level
 					
 					//assigns top score and index
 					if (currentScore > bestScore){
 						bestScore = currentScore;
 						bestIndex = move;
+						
+						//if the computer has a winning move, break the algorithm and return the winning move
+						if (bestScore > 900){
+							return new int[] {bestScore, bestIndex};
+						}
 					}
 				} else { //if the human's 'turn'
 					tempUserArray.add(move);
-					calculatedUserArray.add(move);
-					tempSpacesWithTokensArray.add(move);
+					spacesWithTokensArray.add(move);
 					
-					
-					currentScore = minimax(depth-1, true)[0];
-					
+					currentScore = minimax(depth-1, true)[0]; //calls minimax recursively to the next depth level
 					
 					//assigns top score and index
 					if (currentScore < bestScore){
 						bestScore = currentScore;
 						bestIndex = move;
+						
+						//if the computer has a winning move, break the algorithm and return the winning move
+						if (bestScore > 900){
+							return new int[] {bestScore, bestIndex};
+						}
 					}
 				}
-				//NEED TO UNDO MOVE
+				//Undoes the 'move'
 				if (computerPlayer){
 					tempComputerArray.remove(new Integer(move));
-					calculatedComputerArray.remove(new Integer(move));
 				} else {
 					tempUserArray.remove(new Integer(move));
-					calculatedUserArray.remove(new Integer(move));
 				}
-				tempSpacesWithTokensArray.remove(new Integer(move));
+				spacesWithTokensArray.remove(new Integer(move));
 			}
 		}
-		
-		
 		return new int[] {bestScore, bestIndex};
-		
-		
 	}
-	
 
-	//Checks the lines on the board and returns the current 'score' of the passed in board, which is a sum of the score of all 8 lines
+	//Checks all 8 lines on the board (3 horizontal, 3 vertical, 2 vertical) and returns the current 'score' of the passed in board,
+	//which is a sum of the individual scores of all 8 lines
 	public int checkAllLinesOnTheBoard(){
 		int score = 0;
-//		int score0 = 0;
-//		int score1 = 0;
-//		int score2 = 0;
-//		int score3 = 0;
-//		int score4 = 0;
-//		int score5 = 0;
-//		int score6 = 0;
-//		int score7 = 0;
-//		int score8 = 0;
-//		int highestScore = 0;
-//		int returnValue=-1;
-		
+
 		score += checkRows(0,1,2);
 		score += checkRows(3,4,5);
 		score += checkRows(6,7,8);
@@ -186,124 +141,45 @@ public class AIStrategy {
 		score += checkRows(2,4,6);
 		score += checkRows(0,4,8);
 
-//			if (!spacesWithTokensArray.contains(0)){
-//				score0 += checkRows(0,1,2);
-//				score0 += checkRows(0,4,8);
-//				score0 += checkRows(0,3,6);
-//				if (highestScore < score0){
-//					highestScore = score0;
-//					returnValue = 0;
-//				}
-//			}
-//			if (!spacesWithTokensArray.contains(1)){
-//				score1 += checkRows(1,0,2);
-//				score1 += checkRows(1,4,7);
-//				if (highestScore < score1){
-//					highestScore = score1;
-//					returnValue = 1;
-//				}
-//			}
-//			if (!spacesWithTokensArray.contains(2)){
-//				score2 += checkRows(2,1,0);
-//				score2 += checkRows(2,4,6);
-//				score2 += checkRows(2,5,8);
-//				if (highestScore < score2){
-//					highestScore = score2;
-//					returnValue = 2;
-//				}
-//			}
-//			if (!spacesWithTokensArray.contains(3)){
-//				score3 += checkRows(3,0,6);
-//				score3 += checkRows(3,4,5);
-//				if (highestScore < score3){
-//					highestScore = score3;
-//					returnValue = 3;
-//				}
-//			}
-//			if (!spacesWithTokensArray.contains(4)){
-//				score4 += checkRows(4,0,8);
-//				score4 += checkRows(4,2,6);
-//				score4 += checkRows(4,3,5);
-//				score4 += checkRows(4,1,7);
-//				if (highestScore < score4){
-//					highestScore = score4;
-//					returnValue = 4;
-//				}
-//			}
-//			if (!spacesWithTokensArray.contains(5)){
-//				score5 += checkRows(5,2,8);
-//				score5 += checkRows(5,4,3);
-//				if (highestScore < score5){
-//					highestScore = score5;
-//					returnValue = 5;
-//				}
-//			}
-//			if (!spacesWithTokensArray.contains(6)){
-//				score6 += checkRows(6,3,0);
-//				score6 += checkRows(6,4,2);
-//				score6 += checkRows(6,7,8);
-//				if (highestScore < score6){
-//					highestScore = score6;
-//					returnValue = 6;
-//				}
-//			}
-//			if (!spacesWithTokensArray.contains(7)){
-//				score7 += checkRows(7,4,1);
-//				score7 += checkRows(7,6,8);
-//				if (highestScore < score7){
-//					highestScore = score7;
-//					returnValue = 7;
-//				}
-//			}
-//			if (!spacesWithTokensArray.contains(8)){
-//				score8 += checkRows(8,4,0);
-//				score8 += checkRows(8,5,2);
-//				score8 += checkRows(8,7,6);
-//				if (highestScore < score8){
-//					highestScore = score8;
-//					returnValue = 8;
-//				}
-//			}
-//			
-//			while (returnValue == -1){
-//				for (int i =0; i < 9; i++){
-//					if (!spacesWithTokensArray.contains(i)){
-//						returnValue = i;
-//					}
-//				}
-//			}
-
 		return score;
-		
-		
-		
 	}
+	
+	//Heuristic Board Evaluation Function that returns a 'score' for a passed-in line on the 'Board'
+	/*Returns scores with the following value:
+	 * 100 if the computer will obtain 3 spaces in a line
+	 * 10 if the computer will obtain 2 spaces in a line (the remaining space being blank)
+	 * 1 if the computer will obtain 1 space in a line (the remaining spaces being blank)
+	 * -1 if the user will obtain 1 space in a line (the remaining spaces being blank)
+	 * -10 if the user will obtain 2 spaces in a line (the remaining space being blank)
+	 * -100 if the user will obtain 3 spaces in a line
+	 * 0 if all spaces in a line are empty or if the line contains moves from both the computer and the user
+	 */ 
 	public int checkRows(int x, int y, int z){
 		int score = 0;
 		int userCount = 0;
 		int computerCount = 0;
 
-		if (calculatedUserArray.contains(x)){
+		if (tempUserArray.contains(x)){
 			userCount += 1;
 		}
-		if (calculatedUserArray.contains(y)){
+		if (tempUserArray.contains(y)){
 			userCount += 1;
 		}
-		if (calculatedUserArray.contains(z)){
+		if (tempUserArray.contains(z)){
 			userCount += 1;
 		}
-		if (calculatedComputerArray.contains(x)){
+		if (tempComputerArray.contains(x)){
 			computerCount += 1;
 		}
-		if (calculatedComputerArray.contains(y)){
+		if (tempComputerArray.contains(y)){
 			computerCount += 1;
 		}
-		if (calculatedComputerArray.contains(z)){
+		if (tempComputerArray.contains(z)){
 			computerCount += 1;
 		}
 		
 		if (computerCount==3){
-			score = 100;
+			score = 1000;
 		}else if (computerCount==2&&userCount==0){
 			score = 10;
 		}else if (computerCount==1&&userCount==0){
@@ -313,19 +189,10 @@ public class AIStrategy {
 		}else if (computerCount==0&&userCount==2){
 			score = -10;
 		}else if (userCount==3){
-			score = -100;
+			score = -1000;
 		}else {
 			score = 0;
 		}
 		return score;
-	}
-	
-//	//method that returns true if passed in variable is odd and false if it is even 
-	public boolean designateTurn(int turn){
-		if(turn%2==0){
-			return true;
-		}else{
-			return false;
-		}
 	}
 }
