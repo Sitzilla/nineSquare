@@ -76,7 +76,7 @@ public class TicTacToeGame {
 	
 	//method that manages the computers move
 	public boolean manageComputersTurn(int indexPosition){
-		mostRecentComputerMove = computerStrategy.simulateMoves();
+		mostRecentComputerMove = computerStrategy.returnBestMove(gameTurns);
 		computerArray.add(mostRecentComputerMove);
 		return true;
 	}
@@ -107,8 +107,7 @@ public class TicTacToeGame {
 	public void reset(){
 		computerArray.clear();
 		userArray.clear();
-		computerStrategy.clearComputerArray();
-		computerStrategy.clearUserArray();
+		computerStrategy.clearAllArrays();
 		mostRecentComputerMove = 0;
 		gameTurns = 1;
 		
