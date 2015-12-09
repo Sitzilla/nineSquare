@@ -100,7 +100,7 @@ class TicTacToeGame {
                 while (true) {
                     String command = input.readLine();
 
-                    if (command != null) {
+                    if (command.startsWith("MOVE")) {
                         System.out.println(command);
 
                         //TODO make the split command more readable
@@ -108,6 +108,14 @@ class TicTacToeGame {
                             output.println("LEGAL_MOVE");
                         } else {
                             output.println("ILLEGAL_MOVE");
+                        }
+                    } else if (command.startsWith("CHECK_STATUS")) {
+                        if (threeInARowCheck(1)) {
+                            output.println("WON");
+                        } else if (threeInARowCheck(-1)){
+                            output.println("LOST");
+                        } else {
+                            output.println("PLAYING");
                         }
                     }
                 }

@@ -89,9 +89,6 @@ public class Board extends JPanel implements ActionListener {
         try {
             Object source = evt.getSource(); //finds the source of the objects that triggers the event
             int indexPosition = (Integer) ((JComponent) evt.getSource()).getClientProperty("index"); //variable that represents the buttons 'index' (0-8)
-            //variables used in changing the buttons' text later
-            int rowPos = 0;
-            int columnPos = 0;
 
             out.println("MOVE: " + indexPosition);
 
@@ -100,6 +97,16 @@ public class Board extends JPanel implements ActionListener {
             System.out.println(response);
 
             ((AbstractButton) source).setText("X"); //Sets the user selected button as an 'X'
+
+            // Check for win/loss
+            out.println("CHECK_STATUS");
+
+            response = in.readLine();
+            System.out.println(response);
+
+            if (response.startsWith("WON")) {
+                endOfGame("You win!!");
+            }
 
 
 
