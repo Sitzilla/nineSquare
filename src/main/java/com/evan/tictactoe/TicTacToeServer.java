@@ -7,7 +7,7 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by evan on 12/8/15.
@@ -27,27 +27,49 @@ public class TicTacToeServer {
         } finally {
             listener.close();
         }
-
-
-
     }
-
 }
 
 class TicTacToeGame {
-    ArrayList<Integer> userArray = new ArrayList<Integer>();
-    ArrayList<Integer>  computerArray = new ArrayList<Integer>();
+    AIStrategy computerStrategy = new AIStrategy();
+    int mostRecentComputerMove;
 
     int[] board = { 0, 0, 0,
                     0, 0, 0,
-                    0, 0, 0};
+                    0, 0, 0 };
 
     public synchronized boolean selectSquare(int index) {
         // Illegal move
         if (board[index] != 0) { return false; }
 
         board[index] = 1;
-        userArray.add(index);
+        computerStrategy.setUserArray(index);
+
+        if (!threeInARowCheck(1)) {
+            // Computer selects move
+            mostRecentComputerMove = computerStrategy.returnBestMove();
+            computerStrategy.setComputerArray(mostRecentComputerMove);
+            try {
+                board[mostRecentComputerMove] = -1;
+            } catch (ArrayIndexOutOfBoundsException e) {
+                System.out.println("Game Over");
+            }
+        }
+
+        return true;
+    }
+
+    public synchronized void reset() {
+        Arrays.fill(board, 0);
+        computerStrategy.clearAllArrays();
+    }
+
+    //TODO check that this actually works
+    public synchronized boolean checkDraw() {
+
+        for (int space : board) {
+            if (space == 0) { return false; }
+        }
 
         return true;
     }
@@ -106,6 +128,7 @@ class TicTacToeGame {
                         //TODO make the split command more readable
                         if (selectSquare(Integer.parseInt(command.split(" ")[1]))) {
                             output.println("LEGAL_MOVE");
+                            output.println("OPPONENT_MOVE: " + mostRecentComputerMove);
                         } else {
                             output.println("ILLEGAL_MOVE");
                         }
@@ -114,9 +137,13 @@ class TicTacToeGame {
                             output.println("WON");
                         } else if (threeInARowCheck(-1)){
                             output.println("LOST");
+                        } else if (checkDraw()){
+                            output.println("DRAW");
                         } else {
                             output.println("PLAYING");
                         }
+                    } else if (command.startsWith("RESET")) {
+                        reset();
                     }
                 }
             } catch (IOException e) {

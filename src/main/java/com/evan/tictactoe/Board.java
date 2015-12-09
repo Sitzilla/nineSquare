@@ -30,12 +30,6 @@ public class Board extends JPanel implements ActionListener {
 	JButton[][] buttonArray = new JButton[ARRAYSIZE][ARRAYSIZE];
 	
 	private Font bSize40 = new Font("Arial", Font.PLAIN, 40); //font size for the button
-//	int gameTurns = 1; // starts the game out on turn one (odd values indicate the user's turn, even values the computer's turn)
-//	boolean legalMove; // boolean that returns whether the user's selected move was legal or not
-	
-//	// creates an instance of the TicTacToeGame1
-//	TicTacToeGame1 game = new TicTacToeGame1(buttonArray);
-
 
 	// constructor for the 'Board' class
 	public Board() throws IOException {
@@ -96,7 +90,13 @@ public class Board extends JPanel implements ActionListener {
 
             System.out.println(response);
 
-            ((AbstractButton) source).setText("X"); //Sets the user selected button as an 'X'
+            if (response.startsWith("LEGAL_MOVE")) {
+                ((AbstractButton) source).setText("X"); //Sets the user selected button as an 'X'
+
+                response = in.readLine();
+
+                setOpponentsMove(response);
+            }
 
             // Check for win/loss
             out.println("CHECK_STATUS");
@@ -106,59 +106,15 @@ public class Board extends JPanel implements ActionListener {
 
             if (response.startsWith("WON")) {
                 endOfGame("You win!!");
+            } else if (response.startsWith("LOST")) {
+                endOfGame("Sorry you lose.");
+            } else if (response.startsWith("DRAW")) {
+                endOfGame("Cat's game... it's a draw!");
             }
-
-
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-//            game.setIndexPosition(indexPosition); //sets the selected buttons 'index' in the game instance of the 'TicTacToeGame1' class
-//            legalMove = game.playTheGame(); //attempts to add the user's move to its array of moves. returns true if selected move is legal
-
-//         if selected button was a legal move then mark the button.  If not then do nothing (allowing the user to select again)
-//            if (legalMove) {
-//                gameTurns += 1;
-//                game.setGameTurns(gameTurns);
-//                ((AbstractButton) source).setText("X"); //Sets the user selected button as an 'X'
-//                //checks if the user wins the game
-//                if (game.winningArray(game.getUserArray())){
-//                    // ***If this is ever true then there is something wrong with the computer's AI!  The computer should never lose
-//                    endOfGame("You win!!");
-//                    return;
-//                }
-//
-//                //end the game if game is a draw
-//                if (gameTurns > 9){
-//                    endOfGame("Cat's game... it's a draw!");
-//                    return;
-//                }
-//
-//                //since the player has gone, this will simulate the computers move
-//                game.playTheGame();
-//                int mostRecentComputerMove = game.getMostRecentComputerMove();
-//                //matches the indexed computer move to the correct button
-//                for (int i=0;i<ARRAYSIZE;i++){
-//                    for (int j=0;j<ARRAYSIZE;j++){
-//                        if ((Integer) buttonArray[i][j].getClientProperty("index") == mostRecentComputerMove){
-//                            rowPos = i;
-//                            columnPos = j;
-//                        }
-//                    }
-//                }
-//
-//                buttonArray[rowPos][columnPos].setText("O"); //Sets the computer's selected button as an 'O'
-//                //checks if the computer wins the game
-//                if (game.winningArray(game.getComputerArray())){
-//                    endOfGame("Sorry... the computer wins");
-//                    return;
-//                }
-//                gameTurns += 1;
-//                game.setGameTurns(gameTurns);
-//            }
-
 
     }
 	
@@ -184,17 +140,31 @@ public class Board extends JPanel implements ActionListener {
 	
 	//a method that resets the game back to its original state
 	public void restartGame(){
-		for (int i=0;i<ARRAYSIZE;i++){
-			for (int j=0;j<ARRAYSIZE;j++){
+		for (int i = 0; i < ARRAYSIZE; i++){
+
+			for (int j = 0; j < ARRAYSIZE; j++){
 			buttonArray[i][j].setOpaque(true);
 			buttonArray[i][j].setContentAreaFilled(true);
 			buttonArray[i][j].setBorderPainted(true);
 			buttonArray[i][j].setEnabled(true);
 			buttonArray[i][j].setText("");
+			}
+
+			out.println("RESET");
 		}
-//		gameTurns = 1;
-//		game.reset();
-		}
-	
 	}
+
+    private void setOpponentsMove(String response) {
+        int index = Integer.parseInt(response.split(" ")[1]);
+        System.out.println("Opponent Move: " + index);
+
+        int row = index / 3;
+        int column = index - (3 * row);
+        try {
+            buttonArray[row][column].setText("O");
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Bad comp move: (" + row + ", " + column + ")");
+        }
+
+    }
 }
