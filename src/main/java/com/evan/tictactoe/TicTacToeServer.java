@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
 /**
  * Created by evan on 12/8/15.
@@ -34,6 +35,43 @@ public class TicTacToeServer {
 }
 
 class TicTacToeGame {
+    ArrayList<Integer> userArray = new ArrayList<Integer>();
+    ArrayList<Integer>  computerArray = new ArrayList<Integer>();
+
+    int[] board = { 0, 0, 0,
+                    0, 0, 0,
+                    0, 0, 0};
+
+    public synchronized boolean selectSquare(int index) {
+        // Illegal move
+        if (board[index] != 0) { return false; }
+
+        board[index] = 1;
+        userArray.add(index);
+
+        return true;
+    }
+
+    public boolean threeInARowCheck(int x){
+        if (board[0] == x && board[1] == x && board[2] == x ){
+            return true;
+        } else if (board[0] == x && board[3] == x && board[6] == x ){
+            return true;
+        } else if (board[0] == x && board[4] == x && board[8] == x ){
+            return true;
+        } else if (board[3] == x && board[4] == x && board[5] == x ){
+            return true;
+        } else if (board[6] == x && board[7] == x && board[8] == x ){
+            return true;
+        } else if (board[6] == x && board[4] == x && board[2] == x ){
+            return true;
+        } else if (board[1] == x && board[4] == x && board[7] == x ){
+            return true;
+        } else if (board[2] == x && board[5] == x && board[8] == x ){
+            return true;
+        }
+        return false;
+    }
 
     class Player extends Thread {
         Socket socket;
@@ -64,7 +102,13 @@ class TicTacToeGame {
 
                     if (command != null) {
                         System.out.println(command);
-                        output.println("Sending move to client: " + command);
+
+                        //TODO make the split command more readable
+                        if (selectSquare(Integer.parseInt(command.split(" ")[1]))) {
+                            output.println("LEGAL_MOVE");
+                        } else {
+                            output.println("ILLEGAL_MOVE");
+                        }
                     }
                 }
             } catch (IOException e) {

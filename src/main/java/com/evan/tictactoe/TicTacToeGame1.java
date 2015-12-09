@@ -21,7 +21,7 @@ public class TicTacToeGame1 {
 	
 	//constructor that takes in the 'buttonArray' from the board class
 	TicTacToeGame1(JButton[][] buttonArray){
-		this.buttonArray = buttonArray;;
+		this.buttonArray = buttonArray;
 	}
 	
 	//method called whenever the user or computer selects a square.  returns 'true' or 'false' depending on whether the selected move was legal.
