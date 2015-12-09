@@ -1,13 +1,14 @@
 package src.main.java.com.evan.tictactoe;
 
 import java.awt.Dimension;
+import java.io.IOException;
 
 import javax.swing.JFrame;
 
 public class StartClass {
 
 	
-	public static void main(String args[]) {
+	public static void main(String args[]) throws IOException {
 		JFrame window = new JFrame("Tic Tac Toe");
 		Board content = new Board();
 		window.setContentPane(content);
