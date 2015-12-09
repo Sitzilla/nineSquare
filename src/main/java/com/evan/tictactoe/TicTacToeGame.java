@@ -1,4 +1,4 @@
-package com.evan.calc;
+package src.main.java.com.evan.tictactoe;
 
 import java.util.ArrayList;
 
