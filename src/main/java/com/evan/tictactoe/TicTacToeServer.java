@@ -7,7 +7,6 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
 /**
  * Created by evan on 12/8/15.
@@ -20,7 +19,8 @@ public class TicTacToeServer {
 
         try {
             while (true) {
-                Player player1 = new Player(listener.accept());
+                TicTacToeGame game = new TicTacToeGame();
+                TicTacToeGame.Player player1 = game.new Player(listener.accept());
                 player1.start();
             }
         } finally {
@@ -33,20 +33,22 @@ public class TicTacToeServer {
 
 }
 
+class TicTacToeGame {
+
     class Player extends Thread {
         Socket socket;
         BufferedReader input;
         PrintWriter output;
 
 
-        public Player (Socket socket) {
+        public Player(Socket socket) {
             this.socket = socket;
 
             try {
                 input = new BufferedReader(
                         new InputStreamReader(socket.getInputStream()));
 
-                output.println("Elcome");
+                output = new PrintWriter(socket.getOutputStream(), true);
             } catch (IOException e) {
                 System.out.print("Connection error");
             }
@@ -59,7 +61,11 @@ public class TicTacToeServer {
 
                 while (true) {
                     String command = input.readLine();
-                    System.out.print(command);
+
+                    if (command != null) {
+                        System.out.println(command);
+                        output.println("Sending move to client: " + command);
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -70,6 +76,8 @@ public class TicTacToeServer {
 
 
     }
+
+}
 
 
 

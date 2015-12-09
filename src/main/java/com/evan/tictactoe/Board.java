@@ -30,11 +30,11 @@ public class Board extends JPanel implements ActionListener {
 	JButton[][] buttonArray = new JButton[ARRAYSIZE][ARRAYSIZE];
 	
 	private Font bSize40 = new Font("Arial", Font.PLAIN, 40); //font size for the button
-	int gameTurns = 1; // starts the game out on turn one (odd values indicate the user's turn, even values the computer's turn)
-	boolean legalMove; // boolean that returns whether the user's selected move was legal or not
+//	int gameTurns = 1; // starts the game out on turn one (odd values indicate the user's turn, even values the computer's turn)
+//	boolean legalMove; // boolean that returns whether the user's selected move was legal or not
 	
-	// creates an instance of the TicTacToeGame
-	TicTacToeGame game = new TicTacToeGame(buttonArray);
+//	// creates an instance of the TicTacToeGame1
+//	TicTacToeGame1 game = new TicTacToeGame1(buttonArray);
 
 
 	// constructor for the 'Board' class
@@ -86,65 +86,20 @@ public class Board extends JPanel implements ActionListener {
 	//method for when the user selects one of the buttons on the board
 	public void actionPerformed(ActionEvent evt) {
         String response;
-
         try {
-            response = in.readLine();
-
-            if (response.startsWith("WELCOME")) {
-                restartGame();
-            }
-
             Object source = evt.getSource(); //finds the source of the objects that triggers the event
             int indexPosition = (Integer) ((JComponent) evt.getSource()).getClientProperty("index"); //variable that represents the buttons 'index' (0-8)
             //variables used in changing the buttons' text later
             int rowPos = 0;
             int columnPos = 0;
 
-            out.println("SentMessage");
+            out.println("MOVE: " + indexPosition);
 
-            game.setIndexPosition(indexPosition); //sets the selected buttons 'index' in the game instance of the 'TicTacToeGame' class
-            legalMove = game.playTheGame(); //attempts to add the user's move to its array of moves. returns true if selected move is legal
+            response = in.readLine();
 
-            // if selected button was a legal move then mark the button.  If not then do nothing (allowing the user to select again)
-            if (legalMove) {
-                gameTurns += 1;
-                game.setGameTurns(gameTurns);
-                ((AbstractButton) source).setText("X"); //Sets the user selected button as an 'X'
-                //checks if the user wins the game
-                if (game.winningArray(game.getUserArray())){
-                    // ***If this is ever true then there is something wrong with the computer's AI!  The computer should never lose
-                    endOfGame("You win!!");
-                    return;
-                }
+            System.out.println(response);
 
-                //end the game if game is a draw
-                if (gameTurns > 9){
-                    endOfGame("Cat's game... it's a draw!");
-                    return;
-                }
-
-                //since the player has gone, this will simulate the computers move
-                game.playTheGame();
-                int mostRecentComputerMove = game.getMostRecentComputerMove();
-                //matches the indexed computer move to the correct button
-                for (int i=0;i<ARRAYSIZE;i++){
-                    for (int j=0;j<ARRAYSIZE;j++){
-                        if ((Integer) buttonArray[i][j].getClientProperty("index") == mostRecentComputerMove){
-                            rowPos = i;
-                            columnPos = j;
-                        }
-                    }
-                }
-
-                buttonArray[rowPos][columnPos].setText("O"); //Sets the computer's selected button as an 'O'
-                //checks if the computer wins the game
-                if (game.winningArray(game.getComputerArray())){
-                    endOfGame("Sorry... the computer wins");
-                    return;
-                }
-                gameTurns += 1;
-                game.setGameTurns(gameTurns);
-            }
+            ((AbstractButton) source).setText("X"); //Sets the user selected button as an 'X'
 
 
 
@@ -152,8 +107,53 @@ public class Board extends JPanel implements ActionListener {
             e.printStackTrace();
         }
 
-		
-	}
+
+//            game.setIndexPosition(indexPosition); //sets the selected buttons 'index' in the game instance of the 'TicTacToeGame1' class
+//            legalMove = game.playTheGame(); //attempts to add the user's move to its array of moves. returns true if selected move is legal
+
+//         if selected button was a legal move then mark the button.  If not then do nothing (allowing the user to select again)
+//            if (legalMove) {
+//                gameTurns += 1;
+//                game.setGameTurns(gameTurns);
+//                ((AbstractButton) source).setText("X"); //Sets the user selected button as an 'X'
+//                //checks if the user wins the game
+//                if (game.winningArray(game.getUserArray())){
+//                    // ***If this is ever true then there is something wrong with the computer's AI!  The computer should never lose
+//                    endOfGame("You win!!");
+//                    return;
+//                }
+//
+//                //end the game if game is a draw
+//                if (gameTurns > 9){
+//                    endOfGame("Cat's game... it's a draw!");
+//                    return;
+//                }
+//
+//                //since the player has gone, this will simulate the computers move
+//                game.playTheGame();
+//                int mostRecentComputerMove = game.getMostRecentComputerMove();
+//                //matches the indexed computer move to the correct button
+//                for (int i=0;i<ARRAYSIZE;i++){
+//                    for (int j=0;j<ARRAYSIZE;j++){
+//                        if ((Integer) buttonArray[i][j].getClientProperty("index") == mostRecentComputerMove){
+//                            rowPos = i;
+//                            columnPos = j;
+//                        }
+//                    }
+//                }
+//
+//                buttonArray[rowPos][columnPos].setText("O"); //Sets the computer's selected button as an 'O'
+//                //checks if the computer wins the game
+//                if (game.winningArray(game.getComputerArray())){
+//                    endOfGame("Sorry... the computer wins");
+//                    return;
+//                }
+//                gameTurns += 1;
+//                game.setGameTurns(gameTurns);
+//            }
+
+
+    }
 	
 	//end-of-game method to go through and blank out all of the buttons when called and asks if the user wants a rematch
 	public void endOfGame(String message) throws IOException {
@@ -185,8 +185,8 @@ public class Board extends JPanel implements ActionListener {
 			buttonArray[i][j].setEnabled(true);
 			buttonArray[i][j].setText("");
 		}
-		gameTurns = 1;
-		game.reset();
+//		gameTurns = 1;
+//		game.reset();
 		}
 	
 	}

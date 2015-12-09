@@ -41,7 +41,7 @@ public class AIStrategy {
 		tempComputerArray.clear();
 	}
 	
-	//method called from the 'TicTacToeGame' class that returns the 'best' move for the computer. 
+	//method called from the 'TicTacToeGame1' class that returns the 'best' move for the computer.
 	public int returnBestMove(){
 		int[] bestMove = null;
 			

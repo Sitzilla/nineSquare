@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import javax.swing.JButton;
 
-public class TicTacToeGame {
+public class TicTacToeGame1 {
 
 	//creates Position Arrays that hold the user's and the computer's moves
 	ArrayList<Integer> userArray = new ArrayList<Integer>();
@@ -20,7 +20,7 @@ public class TicTacToeGame {
 	AIStrategy computerStrategy = new AIStrategy(); //creates an instance of the 'AIStrategy' class
 	
 	//constructor that takes in the 'buttonArray' from the board class
-	TicTacToeGame(JButton[][] buttonArray){
+	TicTacToeGame1(JButton[][] buttonArray){
 		this.buttonArray = buttonArray;;
 	}
 	
@@ -77,7 +77,7 @@ public class TicTacToeGame {
 	public void setGameTurns(int turnNumber){
 		gameTurns = turnNumber;
 	}
-	//setter method to modify the 'indexPosition' variable in the 'TicTacToeGame' class from the position selected
+	//setter method to modify the 'indexPosition' variable in the 'TicTacToeGame1' class from the position selected
 	//in the 'Board' class
 	public void setIndexPosition(int pos){
 		indexPosition = pos;
@@ -92,7 +92,7 @@ public class TicTacToeGame {
 		}
 	}
 	
-	//resets all of the variables in the TicTacToeGame.  This is used whenever resetting the game to play again
+	//resets all of the variables in the TicTacToeGame1.  This is used whenever resetting the game to play again
 	public void reset(){
 		computerArray.clear();
 		userArray.clear();
