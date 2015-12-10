@@ -10,9 +10,9 @@ import java.net.Socket;
 import java.util.Arrays;
 
 /**
- * Created by evan on 12/9/15.
+ * Created by evan on 12/8/15.
  */
-public class TicTacToeServer {
+public class TicTacToeServerSinglePlayer {
 
     public static void main(String[] args) throws IOException {
         ServerSocket listener = new ServerSocket(8901, 0, InetAddress.getByName("localhost"));
@@ -20,16 +20,19 @@ public class TicTacToeServer {
 
         try {
             while (true) {
+//                Socket socket = listener.accept();
+//                BufferedReader input;
+//
+//                input = new BufferedReader(
+//                        new InputStreamReader(socket.getInputStream()));
+//
+//                String command = input.readLine();
+//
+//                System.out.println(command);
 
-                MultiPlayerTicTacToeGame game = new MultiPlayerTicTacToeGame();
-
-                MultiPlayerTicTacToeGame.Player playerX = game.new Player(listener.accept());
-                MultiPlayerTicTacToeGame.Player playerO = game.new Player(listener.accept());
-
-
-
-                playerX.start();
-                playerO.start();
+                SinglePlayerTicTacToeGame game = new SinglePlayerTicTacToeGame();
+                SinglePlayerTicTacToeGame.Player player1 = game.new Player(listener.accept());
+                player1.start();
             }
         } finally {
             listener.close();
@@ -37,25 +40,38 @@ public class TicTacToeServer {
     }
 }
 
-
-
-class MultiPlayerTicTacToeGame {
+class SinglePlayerTicTacToeGame {
+    AIStrategy computerStrategy = new AIStrategy();
+    int mostRecentComputerMove;
 
     int[] board = { 0, 0, 0,
-            0, 0, 0,
-            0, 0, 0 };
+                    0, 0, 0,
+                    0, 0, 0 };
 
     public synchronized boolean selectSquare(int index) {
         // Illegal move
         if (board[index] != 0) { return false; }
 
         board[index] = 1;
+        computerStrategy.setUserArray(index);
+
+        if (!threeInARowCheck(1)) {
+            // Computer selects move
+            mostRecentComputerMove = computerStrategy.returnBestMove();
+            computerStrategy.setComputerArray(mostRecentComputerMove);
+            try {
+                board[mostRecentComputerMove] = -1;
+            } catch (ArrayIndexOutOfBoundsException e) {
+                System.out.println("Game Over");
+            }
+        }
 
         return true;
     }
 
     public synchronized void reset() {
         Arrays.fill(board, 0);
+        computerStrategy.clearAllArrays();
     }
 
     //TODO check that this actually works
@@ -122,7 +138,7 @@ class MultiPlayerTicTacToeGame {
                         //TODO make the split command more readable
                         if (selectSquare(Integer.parseInt(command.split(" ")[1]))) {
                             output.println("LEGAL_MOVE");
-                            output.println("OPPONENT_MOVE: " + "NOPE");
+                            output.println("OPPONENT_MOVE: " + mostRecentComputerMove);
                         } else {
                             output.println("ILLEGAL_MOVE");
                         }
@@ -151,3 +167,8 @@ class MultiPlayerTicTacToeGame {
     }
 
 }
+
+
+
+
+
