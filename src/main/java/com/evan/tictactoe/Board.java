@@ -13,6 +13,9 @@ import javax.swing.*;
 @SuppressWarnings("serial")
 public class Board extends JPanel implements ActionListener {
     private static final int ARRAYSIZE = 3; //the dimensions of the board are 3x3
+    private String mark;
+    boolean isMultiplayer;
+    SinglePlayerGameLogic singlePlayerGame;
 
     // Networking members
     private static int PORT = 8901;
@@ -33,7 +36,6 @@ public class Board extends JPanel implements ActionListener {
 
     // constructor for the 'Board' class
     public Board() throws IOException {
-        boolean isMultiplayer;
 
         // creates the JButtons, sets their font size, adds a client property to indicate their position (0-8), and adds an action listener
         for (int i=0;i<ARRAYSIZE;i++) {
@@ -70,18 +72,32 @@ public class Board extends JPanel implements ActionListener {
         add(panelTwo);
         add(panelThree);
 
-        // Setup networking
-        socket = new Socket(serverAddress, PORT);
-        in = new BufferedReader(new InputStreamReader(
-                socket.getInputStream()));
-        out = new PrintWriter(socket.getOutputStream(), true);
+
 
         // select single or multi player mode
         int reply = JOptionPane.showConfirmDialog(null, "Connect for multiplayer game?", "Mode of Play", JOptionPane.YES_NO_OPTION);
+
         if (reply == JOptionPane.NO_OPTION) {
-            out.println("SINGLE");
+            System.out.println("SINGLE");
+            isMultiplayer = false;
+            this.singlePlayerGame = new SinglePlayerGameLogic();
         } else {
             out.println("MULTI");
+            isMultiplayer = true;
+
+            // Setup networking
+            socket = new Socket(serverAddress, PORT);
+            in = new BufferedReader(new InputStreamReader(
+                    socket.getInputStream()));
+            out = new PrintWriter(socket.getOutputStream(), true);
+
+            String response = in.readLine();
+
+            if (response.startsWith("MARK: ")) {
+                mark = response.split(" ")[1];
+
+                System.out.println(mark);
+            }
         }
 
 
@@ -89,42 +105,75 @@ public class Board extends JPanel implements ActionListener {
 
     //method for when the user selects one of the buttons on the board
     public void actionPerformed(ActionEvent evt) {
-        String response;
-        try {
-            Object source = evt.getSource(); //finds the source of the objects that triggers the event
-            int indexPosition = (Integer) ((JComponent) evt.getSource()).getClientProperty("index"); //variable that represents the buttons 'index' (0-8)
+        Object source = evt.getSource(); //finds the source of the objects that triggers the event
+        int indexPosition = (Integer) ((JComponent) evt.getSource()).getClientProperty("index"); //variable that represents the buttons 'index' (0-8)
 
-            out.println("MOVE: " + indexPosition);
 
-            response = in.readLine();
 
-            System.out.println(response);
+        if (isMultiplayer) {
+            String response;
+            try {
 
-            if (response.startsWith("LEGAL_MOVE")) {
-                ((AbstractButton) source).setText("X"); //Sets the user selected button as an 'X'
+                out.println("MOVE: " + indexPosition);
 
                 response = in.readLine();
 
-                setOpponentsMove(response);
+                System.out.println(response);
+
+                if (response.startsWith("LEGAL_MOVE")) {
+                    ((AbstractButton) source).setText("X"); //Sets the user selected button as an 'X'
+
+                    response = in.readLine();
+
+//                    setOpponentsMove(response);
+                }
+
+                // Check for win/loss
+                out.println("CHECK_STATUS");
+
+                response = in.readLine();
+                System.out.println(response);
+
+                if (response.startsWith("WON")) {
+                    endOfGame("You win!!");
+                } else if (response.startsWith("LOST")) {
+                    endOfGame("Sorry you lose.");
+                } else if (response.startsWith("DRAW")) {
+                    endOfGame("Cat's game... it's a draw!");
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+        } else { // Single Player move
+            // TODO refactor out
+            boolean legalMove = false;
+            legalMove = singlePlayerGame.selectSquare(indexPosition);
 
-            // Check for win/loss
-            out.println("CHECK_STATUS");
+            if (legalMove) {
 
-            response = in.readLine();
-            System.out.println(response);
 
-            if (response.startsWith("WON")) {
-                endOfGame("You win!!");
-            } else if (response.startsWith("LOST")) {
-                endOfGame("Sorry you lose.");
-            } else if (response.startsWith("DRAW")) {
-                endOfGame("Cat's game... it's a draw!");
+                // Draw board moves on board
+                setOpponentsMove(singlePlayerGame.getComputersMostRecentMove());
+                ((AbstractButton) source).setText("X");
+
+                String status = singlePlayerGame.checkStatus();
+
+                // TODO make enum
+                try {
+                    if ("WON".equals(status)) {
+                        endOfGame("You win!!");
+                    } else if ("LOSE".equals(status)) {
+                        endOfGame("Sorry you lose.");
+                    } else if ("DRAW".equals(status)) {
+                        endOfGame("Cat's game... it's a draw!");
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+
 
     }
 
@@ -141,6 +190,7 @@ public class Board extends JPanel implements ActionListener {
         JOptionPane.showMessageDialog(null, message);
         int reply = JOptionPane.showConfirmDialog(null, "Play again?", "Rematch", JOptionPane.YES_NO_OPTION);
         if (reply == JOptionPane.NO_OPTION) {
+            // TODO only close if multiplayer
             socket.close();
             System.exit(0);
         } else {
@@ -160,12 +210,15 @@ public class Board extends JPanel implements ActionListener {
                 buttonArray[i][j].setText("");
             }
 
-            out.println("RESET");
+            // TODO change on type of game
+            singlePlayerGame.reset();
+//            out.println("RESET");
         }
     }
 
-    private void setOpponentsMove(String response) {
-        int index = Integer.parseInt(response.split(" ")[1]);
+    private void setOpponentsMove(int index) {
+        //String response) {
+        //int index = Integer.parseInt(response.split(" ")[1]);
         System.out.println("Opponent Move: " + index);
 
         int row = index / 3;

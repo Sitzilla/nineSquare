@@ -23,13 +23,20 @@ public class TicTacToeServer {
 
                 MultiPlayerTicTacToeGame game = new MultiPlayerTicTacToeGame();
 
-                MultiPlayerTicTacToeGame.Player playerX = game.new Player(listener.accept());
-                MultiPlayerTicTacToeGame.Player playerO = game.new Player(listener.accept());
+                Socket socket = listener.accept();
+
+                MultiPlayerTicTacToeGame.Player playerX = game.new Player(socket);
+
+                PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
+
+                output.println("X");
+
+//                MultiPlayerTicTacToeGame.Player playerO = game.new Player(listener.accept());
 
 
 
                 playerX.start();
-                playerO.start();
+//                playerO.start();
             }
         } finally {
             listener.close();
@@ -42,8 +49,8 @@ public class TicTacToeServer {
 class MultiPlayerTicTacToeGame {
 
     int[] board = { 0, 0, 0,
-            0, 0, 0,
-            0, 0, 0 };
+                    0, 0, 0,
+                    0, 0, 0 };
 
     public synchronized boolean selectSquare(int index) {
         // Illegal move
