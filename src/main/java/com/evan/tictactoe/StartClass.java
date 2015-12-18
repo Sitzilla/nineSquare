@@ -7,8 +7,8 @@ import javax.swing.JFrame;
 
 public class StartClass {
 
-	
-	public static void main(String args[]) throws IOException {
+	// TODO remove InterruptedException
+	public static void main(String args[]) throws IOException, InterruptedException {
 		JFrame window = new JFrame("Tic Tac Toe");
 		Board content = new Board();
 		window.setContentPane(content);
@@ -19,5 +19,6 @@ public class StartClass {
 		window.setLocation(200,200);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setVisible(true);
+		content.play();
 	}
 }

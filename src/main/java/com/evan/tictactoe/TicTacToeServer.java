@@ -22,21 +22,17 @@ public class TicTacToeServer {
             while (true) {
 
                 MultiPlayerTicTacToeGame game = new MultiPlayerTicTacToeGame();
+                MultiPlayerTicTacToeGame.Player playerX = game.new Player(listener.accept(), "X");
+                MultiPlayerTicTacToeGame.Player playerO = game.new Player(listener.accept(), "O");
 
-                Socket socket = listener.accept();
+                playerX.setOpponent(playerO);
+                playerO.setOpponent(playerX);
 
-                MultiPlayerTicTacToeGame.Player playerX = game.new Player(socket);
-
-                PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
-
-                output.println("X");
-
-//                MultiPlayerTicTacToeGame.Player playerO = game.new Player(listener.accept());
-
-
+                game.currentPlayer = playerX;
 
                 playerX.start();
-//                playerO.start();
+                playerO.start();
+
             }
         } finally {
             listener.close();
@@ -48,16 +44,22 @@ public class TicTacToeServer {
 
 class MultiPlayerTicTacToeGame {
 
-    int[] board = { 0, 0, 0,
-                    0, 0, 0,
-                    0, 0, 0 };
+    String[] board = { null, null, null,
+                       null, null, null,
+                       null, null, null };
+
+    Player currentPlayer;
+    int mostRecentLegalMove = -1;
+    boolean passedMove = false;
 
     public synchronized boolean selectSquare(int index) {
         // Illegal move
-        if (board[index] != 0) { return false; }
+        if (board[index] != null) { return false; }
 
-        board[index] = 1;
-
+        board[index] = currentPlayer.team;
+        mostRecentLegalMove = index;
+        currentPlayer = currentPlayer.opponent;
+        passedMove = true;
         return true;
     }
 
@@ -68,14 +70,14 @@ class MultiPlayerTicTacToeGame {
     //TODO check that this actually works
     public synchronized boolean checkDraw() {
 
-        for (int space : board) {
-            if (space == 0) { return false; }
+        for (String space : board) {
+            if (space == null) { return false; }
         }
 
         return true;
     }
 
-    public boolean threeInARowCheck(int x){
+    public boolean threeInARowCheck(String x){
         if (board[0] == x && board[1] == x && board[2] == x ){
             return true;
         } else if (board[0] == x && board[3] == x && board[6] == x ){
@@ -100,16 +102,22 @@ class MultiPlayerTicTacToeGame {
         Socket socket;
         BufferedReader input;
         PrintWriter output;
+        String team;
+        Player opponent;
 
 
-        public Player(Socket socket) {
+        public Player(Socket socket, String team) {
             this.socket = socket;
+            this.team = team;
 
             try {
                 input = new BufferedReader(
                         new InputStreamReader(socket.getInputStream()));
 
                 output = new PrintWriter(socket.getOutputStream(), true);
+
+                output.println("WELCOME " + team);
+
             } catch (IOException e) {
                 System.out.print("Connection error");
             }
@@ -117,10 +125,23 @@ class MultiPlayerTicTacToeGame {
 
         }
 
+        public void setOpponent(Player opponent) {
+            this.opponent = opponent;
+        }
+
         public void run() {
             try {
 
+
                 while (true) {
+
+                    if (currentPlayer.team.equals(team)) {
+                        output.println("YOUR_MOVE");
+                    } else {
+                        output.println("NOT_YOUR_MOVE");
+                    }
+
+
                     String command = input.readLine();
 
                     if (command.startsWith("MOVE")) {
@@ -129,22 +150,37 @@ class MultiPlayerTicTacToeGame {
                         //TODO make the split command more readable
                         if (selectSquare(Integer.parseInt(command.split(" ")[1]))) {
                             output.println("LEGAL_MOVE");
-                            output.println("OPPONENT_MOVE: " + "NOPE");
                         } else {
                             output.println("ILLEGAL_MOVE");
                         }
-                    } else if (command.startsWith("CHECK_STATUS")) {
-                        if (threeInARowCheck(1)) {
-                            output.println("WON");
-                        } else if (threeInARowCheck(-1)){
-                            output.println("LOST");
-                        } else if (checkDraw()){
-                            output.println("DRAW");
-                        } else {
-                            output.println("PLAYING");
+
+                        command = input.readLine();
+                        if (command.startsWith("CHECK_STATUS")) {
+                            if (threeInARowCheck("X")) {
+                                output.println("WON");
+                            } else if (threeInARowCheck("O")) {
+                                output.println("LOST");
+                            } else if (checkDraw()) {
+                                output.println("DRAW");
+                            } else {
+                                output.println("PLAYING");
+                            }
                         }
                     } else if (command.startsWith("RESET")) {
                         reset();
+                    } else if (command.startsWith("WAITING")) {
+                        System.out.println("NEED TO GIVE TO OPPONENT");
+
+                        while (!passedMove) {
+                            try {
+                                Thread.sleep(2000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        System.out.println("READY TO PASS TO OPPONENT");
+                        output.println("OPPONENT_MOVE " + mostRecentLegalMove);
+                        passedMove = false;
                     }
                 }
             } catch (IOException e) {

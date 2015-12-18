@@ -13,8 +13,11 @@ import javax.swing.*;
 @SuppressWarnings("serial")
 public class Board extends JPanel implements ActionListener {
     private static final int ARRAYSIZE = 3; //the dimensions of the board are 3x3
-    private String mark;
+    private String team;
+    private String opponant;
     boolean isMultiplayer;
+    boolean myMove;
+    boolean moveMade = true;
     SinglePlayerGameLogic singlePlayerGame;
 
     // Networking members
@@ -82,7 +85,6 @@ public class Board extends JPanel implements ActionListener {
             isMultiplayer = false;
             this.singlePlayerGame = new SinglePlayerGameLogic();
         } else {
-            out.println("MULTI");
             isMultiplayer = true;
 
             // Setup networking
@@ -93,84 +95,161 @@ public class Board extends JPanel implements ActionListener {
 
             String response = in.readLine();
 
-            if (response.startsWith("MARK: ")) {
-                mark = response.split(" ")[1];
+            if (response.startsWith("WELCOME ")) {
+                team = response.split(" ")[1];
 
-                System.out.println(mark);
+                if ("X".equals(team)) {
+                    opponant = "O";
+                    myMove = true;
+                } else {
+                    opponant = "X";
+                    myMove = false;
+                }
+
+                System.out.println("Team is " + team);
             }
         }
 
 
     }
 
+    // TODO remove InterruptedException
+    // Method for controlling game flow
+    public void play() throws IOException, InterruptedException {
+        String response;
+
+        if (isMultiplayer) {
+
+            while (true) {
+
+                Thread.sleep(500);
+                if (myMove) {
+                    for (int i = 0; i < ARRAYSIZE; i++) {
+                        for (int j = 0; j < ARRAYSIZE; j++) {
+                            buttonArray[i][j].setOpaque(true);
+                            buttonArray[i][j].setContentAreaFilled(true);
+                            buttonArray[i][j].setBorderPainted(true);
+                            buttonArray[i][j].setEnabled(true);
+                        }
+                    }
+                    moveMade = false;
+
+                } else {
+                    for (int i = 0; i < ARRAYSIZE; i++) {
+                        for (int j = 0; j < ARRAYSIZE; j++) {
+                            buttonArray[i][j].setOpaque(false);
+                            buttonArray[i][j].setContentAreaFilled(false);
+                            buttonArray[i][j].setBorderPainted(false);
+                            buttonArray[i][j].setEnabled(false);
+                        }
+                    }
+                    moveMade = false;
+
+                    response = in.readLine();
+
+                    // Record opponents move
+                    if (response.startsWith("NOT_YOUR_MOVE")) {
+                        System.out.println("waiting for opponents move");
+                        out.println("WAITING");
+                        response = in.readLine();
+                        if (response.startsWith("OPPONENT_MOVE")) {
+                            System.out.println("Got response " + response);
+                            setOpponentsMove(Integer.parseInt(response.split(" ")[1]));
+                            myMove = true;
+                            moveMade = true;
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+
+
     //method for when the user selects one of the buttons on the board
     public void actionPerformed(ActionEvent evt) {
         Object source = evt.getSource(); //finds the source of the objects that triggers the event
         int indexPosition = (Integer) ((JComponent) evt.getSource()).getClientProperty("index"); //variable that represents the buttons 'index' (0-8)
 
-
-
         if (isMultiplayer) {
             String response;
-            try {
 
-                out.println("MOVE: " + indexPosition);
+            try {
 
                 response = in.readLine();
 
-                System.out.println(response);
+                if (response.startsWith("YOUR_MOVE")) {
 
-                if (response.startsWith("LEGAL_MOVE")) {
-                    ((AbstractButton) source).setText("X"); //Sets the user selected button as an 'X'
+                    System.out.println("MY MOVE");
+
+                    out.println("MOVE: " + indexPosition);
 
                     response = in.readLine();
 
-//                    setOpponentsMove(response);
+                    System.out.println(response);
+
+                    if (response.startsWith("LEGAL_MOVE")) {
+                        ((AbstractButton) source).setText(team); //Sets the user selected button as an 'X'
+                        myMove = false;
+                        moveMade = true;
+                    }
+
+                    // Check for win/loss
+                    out.println("CHECK_STATUS");
+
+                    response = in.readLine();
+                    System.out.println(response);
+
+                    if (response.startsWith("WON")) {
+                        endOfGame("You win!!");
+                    } else if (response.startsWith("LOST")) {
+                        endOfGame("Sorry you lose.");
+                    } else if (response.startsWith("DRAW")) {
+                        endOfGame("Cat's game... it's a draw!");
+                    }
+
+                    if (myMove == false) {
+                        System.out.println("Setting move made to true");
+                        moveMade = true;
+                    }
+
                 }
 
-                // Check for win/loss
-                out.println("CHECK_STATUS");
 
-                response = in.readLine();
-                System.out.println(response);
-
-                if (response.startsWith("WON")) {
-                    endOfGame("You win!!");
-                } else if (response.startsWith("LOST")) {
-                    endOfGame("Sorry you lose.");
-                } else if (response.startsWith("DRAW")) {
-                    endOfGame("Cat's game... it's a draw!");
-                }
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else { // Single Player move
-            // TODO refactor out
-            boolean legalMove = false;
-            legalMove = singlePlayerGame.selectSquare(indexPosition);
-
-            if (legalMove) {
+        } else {
+            singlePlayerMove(source, indexPosition);
+        }
 
 
-                // Draw board moves on board
-                setOpponentsMove(singlePlayerGame.getComputersMostRecentMove());
-                ((AbstractButton) source).setText("X");
+    }
 
-                String status = singlePlayerGame.checkStatus();
+    public void singlePlayerMove(Object source, int indexPosition) {
+        boolean legalMove = false;
+        legalMove = singlePlayerGame.selectSquare(indexPosition);
 
-                // TODO make enum
-                try {
-                    if ("WON".equals(status)) {
-                        endOfGame("You win!!");
-                    } else if ("LOSE".equals(status)) {
-                        endOfGame("Sorry you lose.");
-                    } else if ("DRAW".equals(status)) {
-                        endOfGame("Cat's game... it's a draw!");
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
+        if (legalMove) {
+
+            // Draw board moves on board
+            setOpponentsMove(singlePlayerGame.getComputersMostRecentMove());
+            ((AbstractButton) source).setText(team);
+
+            String status = singlePlayerGame.checkStatus();
+
+            // TODO make enum
+            try {
+                if ("WON".equals(status)) {
+                    endOfGame("You win!!");
+                } else if ("LOSE".equals(status)) {
+                    endOfGame("Sorry you lose.");
+                } else if ("DRAW".equals(status)) {
+                    endOfGame("Cat's game... it's a draw!");
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
 
@@ -190,8 +269,7 @@ public class Board extends JPanel implements ActionListener {
         JOptionPane.showMessageDialog(null, message);
         int reply = JOptionPane.showConfirmDialog(null, "Play again?", "Rematch", JOptionPane.YES_NO_OPTION);
         if (reply == JOptionPane.NO_OPTION) {
-            // TODO only close if multiplayer
-            socket.close();
+            if (isMultiplayer == true) { socket.close(); }
             System.exit(0);
         } else {
             restartGame();
@@ -224,7 +302,7 @@ public class Board extends JPanel implements ActionListener {
         int row = index / 3;
         int column = index - (3 * row);
         try {
-            buttonArray[row][column].setText("O");
+            buttonArray[row][column].setText(opponant);
         } catch (ArrayIndexOutOfBoundsException e) {
             System.out.println("Bad comp move: (" + row + ", " + column + ")");
         }
