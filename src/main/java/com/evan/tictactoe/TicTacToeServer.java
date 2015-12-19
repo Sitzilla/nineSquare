@@ -156,9 +156,9 @@ class MultiPlayerTicTacToeGame {
 
                         command = input.readLine();
                         if (command.startsWith("CHECK_STATUS")) {
-                            if (threeInARowCheck("X")) {
+                            if (threeInARowCheck(currentPlayer.team)) {
                                 output.println("WON");
-                            } else if (threeInARowCheck("O")) {
+                            } else if (threeInARowCheck(currentPlayer.opponent.team)) {
                                 output.println("LOST");
                             } else if (checkDraw()) {
                                 output.println("DRAW");

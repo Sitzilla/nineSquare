@@ -132,8 +132,6 @@ public class Board extends JPanel implements ActionListener {
                             buttonArray[i][j].setEnabled(true);
                         }
                     }
-                    moveMade = false;
-
                 } else {
                     for (int i = 0; i < ARRAYSIZE; i++) {
                         for (int j = 0; j < ARRAYSIZE; j++) {
@@ -143,7 +141,6 @@ public class Board extends JPanel implements ActionListener {
                             buttonArray[i][j].setEnabled(false);
                         }
                     }
-                    moveMade = false;
 
                     response = in.readLine();
 
@@ -156,7 +153,6 @@ public class Board extends JPanel implements ActionListener {
                             System.out.println("Got response " + response);
                             setOpponentsMove(Integer.parseInt(response.split(" ")[1]));
                             myMove = true;
-                            moveMade = true;
                         }
                     }
 

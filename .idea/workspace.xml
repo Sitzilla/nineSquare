@@ -2,19 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="faf55375-d1e5-417c-b2b2-0e9761e0c608" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/com/evan/production/src/main/java/com/evan/tictactoe/SinglePlayerTicTacToeGame$Player.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/com/evan/production/src/main/java/com/evan/tictactoe/SinglePlayerTicTacToeGame.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/com/evan/production/src/main/java/com/evan/tictactoe/TicTacToeServerSinglePlayer.class" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/evan/production/src/main/java/com/evan/tictactoe/Board.class" afterPath="$PROJECT_DIR$/src/main/java/com/evan/production/src/main/java/com/evan/tictactoe/Board.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/evan/production/src/main/java/com/evan/tictactoe/MultiPlayerTicTacToeGame$Player.class" afterPath="$PROJECT_DIR$/src/main/java/com/evan/production/src/main/java/com/evan/tictactoe/MultiPlayerTicTacToeGame$Player.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/evan/production/src/main/java/com/evan/tictactoe/MultiPlayerTicTacToeGame.class" afterPath="$PROJECT_DIR$/src/main/java/com/evan/production/src/main/java/com/evan/tictactoe/MultiPlayerTicTacToeGame.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/evan/production/src/main/java/com/evan/tictactoe/StartClass.class" afterPath="$PROJECT_DIR$/src/main/java/com/evan/production/src/main/java/com/evan/tictactoe/StartClass.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/evan/production/src/main/java/com/evan/tictactoe/TicTacToeServer.class" afterPath="$PROJECT_DIR$/src/main/java/com/evan/production/src/main/java/com/evan/tictactoe/TicTacToeServer.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/evan/tictactoe/Board.java" afterPath="$PROJECT_DIR$/src/main/java/com/evan/tictactoe/Board.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/evan/tictactoe/StartClass.java" afterPath="$PROJECT_DIR$/src/main/java/com/evan/tictactoe/StartClass.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/evan/tictactoe/TicTacToeServer.java" afterPath="$PROJECT_DIR$/src/main/java/com/evan/tictactoe/TicTacToeServer.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/evan/production/.idea/workspace.xml" afterPath="$PROJECT_DIR$/src/main/java/com/evan/production/.idea/workspace.xml" />
     </list>
     <ignored path="nineSquare.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -39,7 +31,7 @@
         <entry file="file://$PROJECT_DIR$/src/main/java/com/evan/tictactoe/TicTacToeServer.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="153" column="31" selection-start-line="153" selection-start-column="31" selection-end-line="153" selection-end-column="31" />
+              <caret line="182" column="43" selection-start-line="182" selection-start-column="43" selection-end-line="182" selection-end-column="43" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -50,8 +42,8 @@
       <file leaf-file-name="Board.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/evan/tictactoe/Board.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.17783505">
-              <caret line="130" column="32" selection-start-line="130" selection-start-column="32" selection-end-line="130" selection-end-column="32" />
+            <state vertical-scroll-proportion="1.0966495">
+              <caret line="133" column="21" selection-start-line="133" selection-start-column="21" selection-end-line="133" selection-end-column="21" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#256#283#0" expanded="true" />
@@ -64,7 +56,7 @@
         <entry file="file://$PROJECT_DIR$/src/main/java/com/evan/tictactoe/StartClass.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="7" column="23" selection-start-line="7" selection-start-column="23" selection-end-line="7" selection-end-column="23" />
+              <caret line="16" column="18" selection-start-line="16" selection-start-column="18" selection-end-line="16" selection-end-column="18" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -104,8 +96,8 @@
         <option value="$PROJECT_DIR$/src/main/java/com/evan/tictactoe/TicTacToeServerSinglePlayer.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/evan/tictactoe/BoardSingle.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/evan/tictactoe/SinglePlayerGameLogic.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/evan/tictactoe/TicTacToeServer.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/evan/tictactoe/StartClass.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/evan/tictactoe/TicTacToeServer.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/evan/tictactoe/Board.java" />
       </list>
     </option>
@@ -757,20 +749,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/evan/tictactoe/TicTacToeServer.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/evan/tictactoe/StartClass.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="153" column="31" selection-start-line="153" selection-start-column="31" selection-end-line="153" selection-end-column="31" />
+          <caret line="16" column="18" selection-start-line="16" selection-start-column="18" selection-end-line="16" selection-end-column="18" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/evan/tictactoe/StartClass.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/evan/tictactoe/TicTacToeServer.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="7" column="23" selection-start-line="7" selection-start-column="23" selection-end-line="7" selection-end-column="23" />
+          <caret line="182" column="43" selection-start-line="182" selection-start-column="43" selection-end-line="182" selection-end-column="43" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -779,8 +771,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/evan/tictactoe/Board.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.17783505">
-          <caret line="130" column="32" selection-start-line="130" selection-start-column="32" selection-end-line="130" selection-end-column="32" />
+        <state vertical-scroll-proportion="1.0966495">
+          <caret line="133" column="21" selection-start-line="133" selection-start-column="21" selection-end-line="133" selection-end-column="21" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#256#283#0" expanded="true" />
