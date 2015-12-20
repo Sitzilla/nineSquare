@@ -12,7 +12,7 @@ import java.util.Arrays;
 /**
  * Created by evan on 12/9/15.
  */
-public class TicTacToeServer {
+public class TicTacToeServerNew {
 
     public static void main(String[] args) throws IOException {
         ServerSocket listener = new ServerSocket(8901, 0, InetAddress.getByName("localhost"));
@@ -21,9 +21,9 @@ public class TicTacToeServer {
         try {
             while (true) {
 
-                MultiPlayerTicTacToeGame game = new MultiPlayerTicTacToeGame();
-                MultiPlayerTicTacToeGame.Player playerX = game.new Player(listener.accept(), "X");
-                MultiPlayerTicTacToeGame.Player playerO = game.new Player(listener.accept(), "O");
+                MultiPlayerTicTacToeGameNew game = new MultiPlayerTicTacToeGameNew();
+                MultiPlayerTicTacToeGameNew.Player playerX = game.new Player(listener.accept(), "X");
+                MultiPlayerTicTacToeGameNew.Player playerO = game.new Player(listener.accept(), "O");
 
                 playerX.setOpponent(playerO);
                 playerO.setOpponent(playerX);
@@ -42,24 +42,23 @@ public class TicTacToeServer {
 
 
 
-class MultiPlayerTicTacToeGame {
+class MultiPlayerTicTacToeGameNew {
 
     String[] board = { null, null, null,
-                       null, null, null,
-                       null, null, null };
+            null, null, null,
+            null, null, null };
 
     Player currentPlayer;
-    int mostRecentLegalMove = -1;
     boolean passedMove = false;
 
-    public synchronized boolean selectSquare(int index) {
+    public synchronized boolean legalMove(int index, Player playerWhoMoved) {
         // Illegal move
-        if (board[index] != null) { return false; }
+        if (board[index] != null || currentPlayer != playerWhoMoved) { return false; }
 
         board[index] = currentPlayer.team;
-        mostRecentLegalMove = index;
         currentPlayer = currentPlayer.opponent;
-        passedMove = true;
+        currentPlayer.otherPlayerMoved(index);
+
         return true;
     }
 
@@ -125,70 +124,65 @@ class MultiPlayerTicTacToeGame {
 
         }
 
+        public void otherPlayerMoved(int index) {
+            output.println("OPPONENT_MOVED " + index);
+            // TODO check victory conditions
+        }
+
         public void setOpponent(Player opponent) {
             this.opponent = opponent;
         }
 
         public void run() {
+            String command;
             try {
-
 
                 while (true) {
 
-//                    String command = input.readLine();
+                    command = input.readLine();
 
-//                    if (command.startsWith("READY")) {
+                    if (command.startsWith("MOVE")) {
+                        System.out.println(command);
 
-                        if (currentPlayer.team.equals(team)) {
-//                            output.println("YOUR_MOVE");
+                        //TODO make the split command more readable
+                        if (legalMove(Integer.parseInt(command.split(" ")[1]), this)) {
+                            output.println("LEGAL_MOVE");
+                            // TODO check victory conditions
+//                            command = input.readLine();
+//                            if (command.startsWith("CHECK_STATUS")) {
+//                                if (threeInARowCheck(team)) {
+//                                    output.println("WON");
+//                                } else if (threeInARowCheck(team)) {
+//                                    output.println("LOST");
+//                                } else if (checkDraw()) {
+//                                    output.println("DRAW");
+//                                } else {
+//                                    output.println("PLAYING");
+//                                }
+//                            }
                         } else {
-                            output.println("NOT_YOUR_MOVE");
+                            output.println("MESSAGE Illegal move");
                         }
 
 
-                        String command = input.readLine();
-
-                        if (command.startsWith("MOVE")) {
-                            System.out.println(command);
-
-                            //TODO make the split command more readable
-                            if (selectSquare(Integer.parseInt(command.split(" ")[1]))) {
-                                output.println("LEGAL_MOVE");
-
-                                command = input.readLine();
-                                if (command.startsWith("CHECK_STATUS")) {
-                                    if (threeInARowCheck(team)) {
-                                        output.println("WON");
-                                    } else if (threeInARowCheck(team)) {
-                                        output.println("LOST");
-                                    } else if (checkDraw()) {
-                                        output.println("DRAW");
-                                    } else {
-                                        output.println("PLAYING");
-                                    }
-                                }
-                            } else {
-                                output.println("ILLEGAL_MOVE");
-                            }
-
-
-                        } else if (command.startsWith("RESET")) {
-                            reset();
-                        } else if (command.startsWith("WAITING")) {
-                            System.out.println("NEED TO GIVE TO OPPONENT");
-
-                            while (!passedMove) {
-                                try {
-                                    Thread.sleep(100);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                            System.out.println("READY TO PASS TO OPPONENT");
-                            output.println("OPPONENT_MOVE " + mostRecentLegalMove);
-                            passedMove = false;
-                        }
+                    } else if (command.startsWith("RESET")) {
+                        reset();
                     }
+//                    else if (command.startsWith("WAITING")) {
+//                        System.out.println("NEED TO GIVE TO OPPONENT");
+//
+//                        while (!passedMove) {
+//                            try {
+//                                Thread.sleep(100);
+//                            } catch (InterruptedException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                        System.out.println("READY TO PASS TO OPPONENT");
+//                        output.println("OPPONENT_MOVE " + mostRecentLegalMove);
+//                        passedMove = false;
+//                    }
+                }
 //                }
             } catch (IOException e) {
                 e.printStackTrace();

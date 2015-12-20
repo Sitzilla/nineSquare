@@ -11,7 +11,7 @@ import java.net.Socket;
 import javax.swing.*;
 
 @SuppressWarnings("serial")
-public class Board extends JPanel implements ActionListener {
+public class BoardNew extends JPanel {
     private static final int ARRAYSIZE = 3; //the dimensions of the board are 3x3
     private String team;
     private String opponant;
@@ -38,7 +38,7 @@ public class Board extends JPanel implements ActionListener {
     private Font bSize40 = new Font("Arial", Font.PLAIN, 40); //font size for the button
 
     // constructor for the 'Board' class
-    public Board() throws IOException {
+    public BoardNew() throws IOException {
 
         // creates the JButtons, sets their font size, adds a client property to indicate their position (0-8), and adds an action listener
         for (int i=0;i<ARRAYSIZE;i++) {
@@ -55,7 +55,7 @@ public class Board extends JPanel implements ActionListener {
                 buttonArray[i][j].addMouseListener(new MouseAdapter() {
                     public void mousePressed(MouseEvent e) {
                         currentButton = buttonArray[finalI][finalJ];
-                        out.println("MOVE: " + indexPosition);
+                        out.println("MOVE " + indexPosition);
                     }
                 });
             }
@@ -115,23 +115,6 @@ public class Board extends JPanel implements ActionListener {
                     opponant = "X";
                     myMove = false;
 
-
-
-                    response = in.readLine();
-
-                    if (response.startsWith("NOT_YOUR_MOVE")) {
-                        System.out.println("Waiting for opponents move");
-                        out.println("WAITING");
-                        response = in.readLine();
-                        if (response.startsWith("OPPONENT_MOVE")) {
-                            System.out.println("Got response " + response);
-                            setOpponentsMove(Integer.parseInt(response.split(" ")[1]));
-//                        myMove = true;
-                        }
-
-                    }
-
-
                 }
 
                 System.out.println("Team is " + team);
@@ -146,162 +129,129 @@ public class Board extends JPanel implements ActionListener {
     public void play() throws IOException, InterruptedException {
         String response;
 
-        if (isMultiplayer) {
+//        if (isMultiplayer) {
 
-            while (true) {
+        while (true) {
 
-                out.println("READY");
-                response = in.readLine();
+            response = in.readLine();
 
-                if (response.startsWith("YOUR_MOVE")) {
-                    myMove = true;
-//                Thread.sleep(500);
-//                    if (myMove) {
-                    for (int i = 0; i < ARRAYSIZE; i++) {
-                        for (int j = 0; j < ARRAYSIZE; j++) {
-                            buttonArray[i][j].setOpaque(true);
-                            buttonArray[i][j].setContentAreaFilled(true);
-                            buttonArray[i][j].setBorderPainted(true);
-                            buttonArray[i][j].setEnabled(true);
-                        }
-                    }
+            if (response.startsWith("LEGAL_MOVE")) {
+                currentButton.setText(team);
+            } else if (response.startsWith("OPPONENT_MOVED")) {
+                System.out.println("Opponent moved... your turn.");
+                setOpponentsMove(Integer.parseInt(response.split(" ")[1]));
+            }
+            // TODO receive victory conditions here
 
-                    while (myMove == true) {
-                        Thread.sleep(1000);
-                    }
-                } else if (response.startsWith("NOT_YOUR_MOVE")) {
-//                    } else {
-                    for (int i = 0; i < ARRAYSIZE; i++) {
-                        for (int j = 0; j < ARRAYSIZE; j++) {
-                            buttonArray[i][j].setOpaque(false);
-                            buttonArray[i][j].setContentAreaFilled(false);
-                            buttonArray[i][j].setBorderPainted(false);
-                            buttonArray[i][j].setEnabled(false);
-                        }
-                    }
-
-//                    response = in.readLine();
-
-                    System.out.println("Waiting for opponents move");
-                    out.println("WAITING");
-                    response = in.readLine();
-                    if (response.startsWith("OPPONENT_MOVE")) {
-                        System.out.println("Got response " + response);
-                        setOpponentsMove(Integer.parseInt(response.split(" ")[1]));
-//                        myMove = true;
-                    }
-                }
-
-
-//                    }
+            else if (response.startsWith("MESSAGE")) {
 
             }
         }
     }
 
-
-    //method for when the user selects one of the buttons on the board
-    public void actionPerformed(ActionEvent evt) {
-        Object source = evt.getSource(); //finds the source of the objects that triggers the event
-        int indexPosition = (Integer) ((JComponent) evt.getSource()).getClientProperty("index"); //variable that represents the buttons 'index' (0-8)
-
-        if (isMultiplayer) {
-            String response;
-            try {
-
+//
+//    //method for when the user selects one of the buttons on the board
+//    public void actionPerformed(ActionEvent evt) {
+//        Object source = evt.getSource(); //finds the source of the objects that triggers the event
+//        int indexPosition = (Integer) ((JComponent) evt.getSource()).getClientProperty("index"); //variable that represents the buttons 'index' (0-8)
+//
+//        if (isMultiplayer) {
+//            String response;
+//            try {
+//
+////                response = in.readLine();
+//
+////                if (response.startsWith("YOUR_MOVE")) {
+//
+//                System.out.println("MY MOVE");
+//
+//                out.println("MOVE: " + indexPosition);
+//
 //                response = in.readLine();
-
-//                if (response.startsWith("YOUR_MOVE")) {
-
-                    System.out.println("MY MOVE");
-
-                    out.println("MOVE: " + indexPosition);
-
-                    response = in.readLine();
-
-                    System.out.println(response);
-
-                    if (response.startsWith("LEGAL_MOVE")) {
-                        ((AbstractButton) source).setText(team); //Sets the user selected button as an 'X'
-
-
-                        // Check for win/loss
-                        out.println("CHECK_STATUS");
-
-                        response = in.readLine();
-                        System.out.println(response);
-
-                        if (response.startsWith("WON")) {
-                            endOfGame("You win!!");
-                        } else if (response.startsWith("LOST")) {
-                            endOfGame("Sorry you lose.");
-                        } else if (response.startsWith("DRAW")) {
-                            endOfGame("Cat's game... it's a draw!");
-                        }
-
-//                        try {
-//                            Thread.sleep(100);
-//                        } catch (InterruptedException e) {
-//                            e.printStackTrace();
+//
+//                System.out.println(response);
+//
+//                if (response.startsWith("LEGAL_MOVE")) {
+//                    ((AbstractButton) source).setText(team); //Sets the user selected button as an 'X'
+//
+//
+//                    // Check for win/loss
+//                    out.println("CHECK_STATUS");
+//
+//                    response = in.readLine();
+//                    System.out.println(response);
+//
+//                    if (response.startsWith("WON")) {
+//                        endOfGame("You win!!");
+//                    } else if (response.startsWith("LOST")) {
+//                        endOfGame("Sorry you lose.");
+//                    } else if (response.startsWith("DRAW")) {
+//                        endOfGame("Cat's game... it's a draw!");
+//                    }
+//
+////                        try {
+////                            Thread.sleep(100);
+////                        } catch (InterruptedException e) {
+////                            e.printStackTrace();
+////                        }
+//
+//                    for (int i = 0; i < ARRAYSIZE; i++) {
+//                        for (int j = 0; j < ARRAYSIZE; j++) {
+//                            buttonArray[i][j].setOpaque(false);
+//                            buttonArray[i][j].setContentAreaFilled(false);
+//                            buttonArray[i][j].setBorderPainted(false);
+//                            buttonArray[i][j].setEnabled(false);
 //                        }
-
-                        for (int i = 0; i < ARRAYSIZE; i++) {
-                            for (int j = 0; j < ARRAYSIZE; j++) {
-                                buttonArray[i][j].setOpaque(false);
-                                buttonArray[i][j].setContentAreaFilled(false);
-                                buttonArray[i][j].setBorderPainted(false);
-                                buttonArray[i][j].setEnabled(false);
-                            }
-                        }
-
-                        try {
-                            wait(1000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-
-//                        try {
-//                            Thread.sleep(500);
-//                        } catch (InterruptedException e) {
-//                            e.printStackTrace();
+//                    }
+//
+//                    try {
+//                        wait(1000);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//
+////                        try {
+////                            Thread.sleep(500);
+////                        } catch (InterruptedException e) {
+////                            e.printStackTrace();
+////                        }
+//
+//                    response = in.readLine();
+//
+//                    if (response.startsWith("NOT_YOUR_MOVE")) {
+//                        System.out.println("Waiting for opponents move");
+//                        out.println("WAITING");
+//                        response = in.readLine();
+//                        if (response.startsWith("OPPONENT_MOVE")) {
+//                            System.out.println("Got response " + response);
+//                            setOpponentsMove(Integer.parseInt(response.split(" ")[1]));
 //                        }
-
-                        response = in.readLine();
-
-                        if (response.startsWith("NOT_YOUR_MOVE")) {
-                            System.out.println("Waiting for opponents move");
-                            out.println("WAITING");
-                            response = in.readLine();
-                            if (response.startsWith("OPPONENT_MOVE")) {
-                                System.out.println("Got response " + response);
-                                setOpponentsMove(Integer.parseInt(response.split(" ")[1]));
-                            }
-
-                        }
-
-                        for (int i = 0; i < ARRAYSIZE; i++) {
-                            for (int j = 0; j < ARRAYSIZE; j++) {
-                                buttonArray[i][j].setOpaque(true);
-                                buttonArray[i][j].setContentAreaFilled(true);
-                                buttonArray[i][j].setBorderPainted(true);
-                                buttonArray[i][j].setEnabled(true);
-                            }
-                        }
-
-
-                    }
-
+//
+//                    }
+//
+//                    for (int i = 0; i < ARRAYSIZE; i++) {
+//                        for (int j = 0; j < ARRAYSIZE; j++) {
+//                            buttonArray[i][j].setOpaque(true);
+//                            buttonArray[i][j].setContentAreaFilled(true);
+//                            buttonArray[i][j].setBorderPainted(true);
+//                            buttonArray[i][j].setEnabled(true);
+//                        }
+//                    }
+//
+//
 //                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            singlePlayerMove(source, indexPosition);
-        }
-
-        myMove = false;
-
-    }
+//
+////                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        } else {
+//            singlePlayerMove(source, indexPosition);
+//        }
+//
+//        myMove = false;
+//
+//    }
 
     public void singlePlayerMove(Object source, int indexPosition) {
         boolean legalMove = false;

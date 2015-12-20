@@ -10,7 +10,7 @@ public class StartClass {
 	// TODO remove InterruptedException
 	public static void main(String args[]) throws IOException, InterruptedException {
 		JFrame window = new JFrame("Tic Tac Toe");
-		Board content = new Board();
+		BoardNew content = new BoardNew();
 		window.setContentPane(content);
 		Dimension d = new Dimension(600,600);
 		window.setPreferredSize(d);

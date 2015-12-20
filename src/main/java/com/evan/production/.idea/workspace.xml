@@ -2,19 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="faf55375-d1e5-417c-b2b2-0e9761e0c608" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/com/evan/production/src/main/java/com/evan/tictactoe/SinglePlayerTicTacToeGame$Player.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/com/evan/production/src/main/java/com/evan/tictactoe/SinglePlayerTicTacToeGame.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/com/evan/production/src/main/java/com/evan/tictactoe/TicTacToeServerSinglePlayer.class" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/evan/production/src/main/java/com/evan/tictactoe/Board.class" afterPath="$PROJECT_DIR$/src/main/java/com/evan/production/src/main/java/com/evan/tictactoe/Board.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/evan/production/src/main/java/com/evan/tictactoe/MultiPlayerTicTacToeGame$Player.class" afterPath="$PROJECT_DIR$/src/main/java/com/evan/production/src/main/java/com/evan/tictactoe/MultiPlayerTicTacToeGame$Player.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/evan/production/src/main/java/com/evan/tictactoe/MultiPlayerTicTacToeGame.class" afterPath="$PROJECT_DIR$/src/main/java/com/evan/production/src/main/java/com/evan/tictactoe/MultiPlayerTicTacToeGame.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/evan/production/src/main/java/com/evan/tictactoe/StartClass.class" afterPath="$PROJECT_DIR$/src/main/java/com/evan/production/src/main/java/com/evan/tictactoe/StartClass.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/evan/production/src/main/java/com/evan/tictactoe/TicTacToeServer.class" afterPath="$PROJECT_DIR$/src/main/java/com/evan/production/src/main/java/com/evan/tictactoe/TicTacToeServer.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/evan/tictactoe/Board.java" afterPath="$PROJECT_DIR$/src/main/java/com/evan/tictactoe/Board.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/evan/tictactoe/StartClass.java" afterPath="$PROJECT_DIR$/src/main/java/com/evan/tictactoe/StartClass.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/evan/tictactoe/TicTacToeServer.java" afterPath="$PROJECT_DIR$/src/main/java/com/evan/tictactoe/TicTacToeServer.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/evan/production/.idea/workspace.xml" afterPath="$PROJECT_DIR$/src/main/java/com/evan/production/.idea/workspace.xml" />
     </list>
     <ignored path="nineSquare.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -38,10 +29,12 @@
       <file leaf-file-name="TicTacToeServer.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/evan/tictactoe/TicTacToeServer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.26546392">
-              <caret line="164" column="31" selection-start-line="164" selection-start-column="31" selection-end-line="164" selection-end-column="31" />
+            <state vertical-scroll-proportion="0.23195876">
+              <caret line="139" column="20" selection-start-line="139" selection-start-column="20" selection-end-line="139" selection-end-column="20" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#3590#3591#0" expanded="true" />
+                <element signature="e#3638#3639#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -51,7 +44,7 @@
         <entry file="file://$PROJECT_DIR$/src/main/java/com/evan/tictactoe/Board.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="206" column="24" selection-start-line="206" selection-start-column="24" selection-end-line="206" selection-end-column="24" />
+              <caret line="218" column="0" selection-start-line="218" selection-start-column="0" selection-end-line="218" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -63,7 +56,7 @@
         <entry file="file://$PROJECT_DIR$/src/main/java/com/evan/tictactoe/StartClass.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="17" column="21" selection-start-line="17" selection-start-column="21" selection-end-line="17" selection-end-column="21" />
+              <caret line="10" column="22" selection-start-line="10" selection-start-column="22" selection-end-line="10" selection-end-column="22" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -104,8 +97,8 @@
         <option value="$PROJECT_DIR$/src/main/java/com/evan/tictactoe/BoardSingle.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/evan/tictactoe/SinglePlayerGameLogic.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/evan/tictactoe/StartClass.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/evan/tictactoe/Board.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/evan/tictactoe/TicTacToeServer.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/evan/tictactoe/Board.java" />
       </list>
     </option>
   </component>
@@ -147,6 +140,8 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -221,15 +216,13 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="settings.editor.selected.configurable" value="configurable.group.appearance" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../networking-tests" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="recentsLimit" value="5" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
@@ -492,7 +485,7 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39939025" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39925373" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329602" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -515,7 +508,15 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="6" />
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/evan/tictactoe/Board.java</url>
+          <line>174</line>
+          <properties />
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+      </breakpoints>
+      <option name="time" value="9" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -527,9 +528,43 @@
     <entry file="file://$PROJECT_DIR$/src/main/java/com/evan/tictactoe/TicTacToeServer.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
+          <caret line="127" column="26" selection-start-line="127" selection-start-column="26" selection-end-line="127" selection-end-column="26" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#3590#3591#0" expanded="true" />
+            <element signature="e#3638#3639#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/evan/tictactoe/Board.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/evan/tictactoe/StartClass.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="10" column="22" selection-start-line="10" selection-start-column="22" selection-end-line="10" selection-end-column="22" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/evan/tictactoe/TicTacToeServer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
           <caret line="182" column="57" selection-start-line="182" selection-start-column="57" selection-end-line="182" selection-end-column="57" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#3590#3591#0" expanded="true" />
+            <element signature="e#3638#3639#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -568,7 +603,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -588,6 +622,8 @@
           <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#3590#3591#0" expanded="true" />
+            <element signature="e#3638#3639#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -749,14 +785,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-0.40592784">
           <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/evan/tictactoe/StartClass.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="17" column="21" selection-start-line="17" selection-start-column="21" selection-end-line="17" selection-end-column="21" />
+          <caret line="10" column="22" selection-start-line="10" selection-start-column="22" selection-end-line="10" selection-end-column="22" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -766,7 +801,7 @@
     <entry file="file://$PROJECT_DIR$/src/main/java/com/evan/tictactoe/Board.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="206" column="24" selection-start-line="206" selection-start-column="24" selection-end-line="206" selection-end-column="24" />
+          <caret line="218" column="0" selection-start-line="218" selection-start-column="0" selection-end-line="218" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -775,10 +810,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/evan/tictactoe/TicTacToeServer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.26546392">
-          <caret line="164" column="31" selection-start-line="164" selection-start-column="31" selection-end-line="164" selection-end-column="31" />
+        <state vertical-scroll-proportion="0.23195876">
+          <caret line="139" column="20" selection-start-line="139" selection-start-column="20" selection-end-line="139" selection-end-column="20" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#3590#3591#0" expanded="true" />
+            <element signature="e#3638#3639#0" expanded="true" />
           </folding>
         </state>
       </provider>
