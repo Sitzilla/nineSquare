@@ -129,8 +129,6 @@ public class BoardNew extends JPanel {
     public void play() throws IOException, InterruptedException {
         String response;
 
-//        if (isMultiplayer) {
-
         while (true) {
 
             response = in.readLine();
@@ -138,12 +136,17 @@ public class BoardNew extends JPanel {
             if (response.startsWith("LEGAL_MOVE")) {
                 currentButton.setText(team);
             } else if (response.startsWith("OPPONENT_MOVED")) {
-                System.out.println("Opponent moved... your turn.");
                 setOpponentsMove(Integer.parseInt(response.split(" ")[1]));
-            }
-            // TODO receive victory conditions here
-
-            else if (response.startsWith("MESSAGE")) {
+            } else if (response.startsWith("ENDING")) {
+                String ending = response.split(" ")[1];
+                if ("WON".equals(ending)) {
+                    endOfGame("You win!!");
+                } else if ("LOST".equals(ending)) {
+                    endOfGame("Sorry you lose.");
+                } else if ("DRAW".equals(ending)) {
+                    endOfGame("Cat's game... it's a draw!");
+                }
+            } else if (response.startsWith("MESSAGE")) {
 
             }
         }
