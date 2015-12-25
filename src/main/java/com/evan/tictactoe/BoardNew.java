@@ -41,8 +41,8 @@ public class BoardNew extends JPanel {
     public BoardNew() throws IOException {
 
         // creates the JButtons, sets their font size, adds a client property to indicate their position (0-8), and adds an action listener
-        for (int i=0;i<ARRAYSIZE;i++) {
-            for (int j=0;j<ARRAYSIZE;j++) {
+        for (int i = 0; i < ARRAYSIZE; i++) {
+            for (int j = 0; j < ARRAYSIZE; j++) {
                 int setPropertyIndex = (i * 3) + j;
                 buttonArray[i][j] = new JButton();
                 buttonArray[i][j].setFont(bSize40);
@@ -124,9 +124,8 @@ public class BoardNew extends JPanel {
 
     }
 
-    // TODO remove InterruptedException
     // Method for controlling game flow
-    public void play() throws IOException, InterruptedException {
+    public void play() throws IOException {
         String response;
 
         while (true) {
@@ -287,8 +286,8 @@ public class BoardNew extends JPanel {
 
     //end-of-game method to go through and blank out all of the buttons when called and asks if the user wants a rematch
     public void endOfGame(String message) throws IOException {
-        for (int i=0;i<ARRAYSIZE;i++){
-            for (int j=0;j<ARRAYSIZE;j++){
+        for (int i = 0; i < ARRAYSIZE; i++){
+            for (int j = 0; j < ARRAYSIZE; j++){
                 buttonArray[i][j].setOpaque(false);
                 buttonArray[i][j].setContentAreaFilled(false);
                 buttonArray[i][j].setBorderPainted(false);
@@ -318,8 +317,8 @@ public class BoardNew extends JPanel {
             }
 
             // TODO change on type of game
-            singlePlayerGame.reset();
-//            out.println("RESET");
+//            singlePlayerGame.reset();
+            out.println("RESET");
         }
     }
 

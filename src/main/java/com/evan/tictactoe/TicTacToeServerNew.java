@@ -62,7 +62,11 @@ class MultiPlayerTicTacToeGameNew {
     }
 
     public synchronized void reset() {
-        Arrays.fill(board, 0);
+        Arrays.fill(board, null);
+
+        if ("O".equals(currentPlayer.team)) {
+            currentPlayer = currentPlayer.opponent;
+        }
     }
 
     //TODO check that this actually works
@@ -125,7 +129,17 @@ class MultiPlayerTicTacToeGameNew {
 
         public void otherPlayerMoved(int index) {
             output.println("OPPONENT_MOVED " + index);
-            // TODO check victory conditions
+            checkEndOfGame();
+        }
+
+        public void checkEndOfGame() {
+            if (threeInARowCheck(team)) {
+                output.println("ENDING WON");
+            } else if (threeInARowCheck(opponent.team)) {
+                output.println("ENDING LOST");
+            } else if (checkDraw()) {
+                output.println("ENDING DRAW");
+            }
         }
 
         public void setOpponent(Player opponent) {
@@ -146,13 +160,7 @@ class MultiPlayerTicTacToeGameNew {
                         //TODO make the split command more readable
                         if (legalMove(Integer.parseInt(command.split(" ")[1]), this)) {
                             output.println("LEGAL_MOVE");
-                            if (threeInARowCheck(team)) {
-                                output.println("ENDING WON");
-                            } else if (threeInARowCheck(opponent.team)) {
-                                output.println("ENDING LOST");
-                            } else if (checkDraw()) {
-                                output.println("ENDING DRAW");
-                            }
+                            checkEndOfGame();
                         } else {
                             output.println("MESSAGE Illegal move");
                         }
