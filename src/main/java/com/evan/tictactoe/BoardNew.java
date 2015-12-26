@@ -11,7 +11,7 @@ import java.net.Socket;
 import javax.swing.*;
 
 @SuppressWarnings("serial")
-public class BoardNew extends JPanel {
+public class BoardNew extends JPanel implements ActionListener {
     private static final int ARRAYSIZE = 3; //the dimensions of the board are 3x3
     private String team;
     private String opponant;
@@ -40,59 +40,14 @@ public class BoardNew extends JPanel {
     // constructor for the 'Board' class
     public BoardNew() throws IOException {
 
-        // creates the JButtons, sets their font size, adds a client property to indicate their position (0-8), and adds an action listener
-        for (int i = 0; i < ARRAYSIZE; i++) {
-            for (int j = 0; j < ARRAYSIZE; j++) {
-                int setPropertyIndex = (i * 3) + j;
-                buttonArray[i][j] = new JButton();
-                buttonArray[i][j].setFont(bSize40);
-                buttonArray[i][j].putClientProperty("index", setPropertyIndex);
-//                buttonArray[i][j].addActionListener(this);
-                final int finalJ = j;
-                final int finalI = i;
-                final int indexPosition = (i * 3) + j;
-
-                buttonArray[i][j].addMouseListener(new MouseAdapter() {
-                    public void mousePressed(MouseEvent e) {
-                        currentButton = buttonArray[finalI][finalJ];
-                        out.println("MOVE " + indexPosition);
-                    }
-                });
-            }
-        }
-
-        // assigns three buttons to panel one
-        panelOne.setLayout( new GridLayout(1,3));
-        panelOne.add(buttonArray[0][0]);
-        panelOne.add(buttonArray[0][1]);
-        panelOne.add(buttonArray[0][2]);
-
-        // assigns three buttons to panel two
-        panelTwo.setLayout( new GridLayout(1,3));
-        panelTwo.add(buttonArray[1][0]);
-        panelTwo.add(buttonArray[1][1]);
-        panelTwo.add(buttonArray[1][2]);
-
-        // assigns three buttons to panel three
-        panelThree.setLayout( new GridLayout(1,3));
-        panelThree.add(buttonArray[2][0]);
-        panelThree.add(buttonArray[2][1]);
-        panelThree.add(buttonArray[2][2]);
-
-        // adds all of the rows to the frame
-        setLayout( new GridLayout(3,1));
-        add(panelOne);
-        add(panelTwo);
-        add(panelThree);
-
-
-
         // select single or multi player mode
         int reply = JOptionPane.showConfirmDialog(null, "Connect for multiplayer game?", "Mode of Play", JOptionPane.YES_NO_OPTION);
 
         if (reply == JOptionPane.NO_OPTION) {
             System.out.println("SINGLE");
             isMultiplayer = false;
+            team = "X";
+            opponant = "O";
             this.singlePlayerGame = new SinglePlayerGameLogic();
         } else {
             isMultiplayer = true;
@@ -121,139 +76,94 @@ public class BoardNew extends JPanel {
             }
         }
 
+        // creates the JButtons, sets their font size, adds a client property to indicate their position (0-8), and adds an action listener
+        for (int i = 0; i < ARRAYSIZE; i++) {
+            for (int j = 0; j < ARRAYSIZE; j++) {
+                int setPropertyIndex = (i * 3) + j;
+                buttonArray[i][j] = new JButton();
+                buttonArray[i][j].setFont(bSize40);
+                buttonArray[i][j].putClientProperty("index", setPropertyIndex);
+                final int finalJ = j;
+                final int finalI = i;
+                final int indexPosition = (i * 3) + j;
 
+                if (isMultiplayer) {
+                    buttonArray[i][j].addMouseListener(new MouseAdapter() {
+                        public void mousePressed(MouseEvent e) {
+                            currentButton = buttonArray[finalI][finalJ];
+                            out.println("MOVE " + indexPosition);
+                        }
+                    });
+                } else {
+                    buttonArray[i][j].addActionListener(this);
+                }
+            }
+        }
+
+        // assigns three buttons to panel one
+        panelOne.setLayout( new GridLayout(1,3));
+        panelOne.add(buttonArray[0][0]);
+        panelOne.add(buttonArray[0][1]);
+        panelOne.add(buttonArray[0][2]);
+
+        // assigns three buttons to panel two
+        panelTwo.setLayout( new GridLayout(1,3));
+        panelTwo.add(buttonArray[1][0]);
+        panelTwo.add(buttonArray[1][1]);
+        panelTwo.add(buttonArray[1][2]);
+
+        // assigns three buttons to panel three
+        panelThree.setLayout( new GridLayout(1,3));
+        panelThree.add(buttonArray[2][0]);
+        panelThree.add(buttonArray[2][1]);
+        panelThree.add(buttonArray[2][2]);
+
+        // adds all of the rows to the frame
+        setLayout( new GridLayout(3,1));
+        add(panelOne);
+        add(panelTwo);
+        add(panelThree);
     }
 
     // Method for controlling game flow
     public void play() throws IOException {
         String response;
 
-        while (true) {
+        if (isMultiplayer) {
+            while (true) {
 
-            response = in.readLine();
+                response = in.readLine();
 
-            if (response.startsWith("LEGAL_MOVE")) {
-                currentButton.setText(team);
-            } else if (response.startsWith("OPPONENT_MOVED")) {
-                setOpponentsMove(Integer.parseInt(response.split(" ")[1]));
-            } else if (response.startsWith("ENDING")) {
-                String ending = response.split(" ")[1];
-                if ("WON".equals(ending)) {
-                    endOfGame("You win!!");
-                } else if ("LOST".equals(ending)) {
-                    endOfGame("Sorry you lose.");
-                } else if ("DRAW".equals(ending)) {
-                    endOfGame("Cat's game... it's a draw!");
+                if (response.startsWith("LEGAL_MOVE")) {
+                    currentButton.setText(team);
+                } else if (response.startsWith("OPPONENT_MOVED")) {
+                    setOpponentsMove(Integer.parseInt(response.split(" ")[1]));
+                } else if (response.startsWith("ENDING")) {
+                    String ending = response.split(" ")[1];
+                    if ("WON".equals(ending)) {
+                        endOfGame("You win!!");
+                    } else if ("LOST".equals(ending)) {
+                        endOfGame("Sorry you lose.");
+                    } else if ("DRAW".equals(ending)) {
+                        endOfGame("Cat's game... it's a draw!");
+                    }
+                } else if (response.startsWith("MESSAGE")) {
+
                 }
-            } else if (response.startsWith("MESSAGE")) {
-
             }
+        } else {
+
+
         }
     }
 
-//
-//    //method for when the user selects one of the buttons on the board
-//    public void actionPerformed(ActionEvent evt) {
-//        Object source = evt.getSource(); //finds the source of the objects that triggers the event
-//        int indexPosition = (Integer) ((JComponent) evt.getSource()).getClientProperty("index"); //variable that represents the buttons 'index' (0-8)
-//
-//        if (isMultiplayer) {
-//            String response;
-//            try {
-//
-////                response = in.readLine();
-//
-////                if (response.startsWith("YOUR_MOVE")) {
-//
-//                System.out.println("MY MOVE");
-//
-//                out.println("MOVE: " + indexPosition);
-//
-//                response = in.readLine();
-//
-//                System.out.println(response);
-//
-//                if (response.startsWith("LEGAL_MOVE")) {
-//                    ((AbstractButton) source).setText(team); //Sets the user selected button as an 'X'
-//
-//
-//                    // Check for win/loss
-//                    out.println("CHECK_STATUS");
-//
-//                    response = in.readLine();
-//                    System.out.println(response);
-//
-//                    if (response.startsWith("WON")) {
-//                        endOfGame("You win!!");
-//                    } else if (response.startsWith("LOST")) {
-//                        endOfGame("Sorry you lose.");
-//                    } else if (response.startsWith("DRAW")) {
-//                        endOfGame("Cat's game... it's a draw!");
-//                    }
-//
-////                        try {
-////                            Thread.sleep(100);
-////                        } catch (InterruptedException e) {
-////                            e.printStackTrace();
-////                        }
-//
-//                    for (int i = 0; i < ARRAYSIZE; i++) {
-//                        for (int j = 0; j < ARRAYSIZE; j++) {
-//                            buttonArray[i][j].setOpaque(false);
-//                            buttonArray[i][j].setContentAreaFilled(false);
-//                            buttonArray[i][j].setBorderPainted(false);
-//                            buttonArray[i][j].setEnabled(false);
-//                        }
-//                    }
-//
-//                    try {
-//                        wait(1000);
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//
-////                        try {
-////                            Thread.sleep(500);
-////                        } catch (InterruptedException e) {
-////                            e.printStackTrace();
-////                        }
-//
-//                    response = in.readLine();
-//
-//                    if (response.startsWith("NOT_YOUR_MOVE")) {
-//                        System.out.println("Waiting for opponents move");
-//                        out.println("WAITING");
-//                        response = in.readLine();
-//                        if (response.startsWith("OPPONENT_MOVE")) {
-//                            System.out.println("Got response " + response);
-//                            setOpponentsMove(Integer.parseInt(response.split(" ")[1]));
-//                        }
-//
-//                    }
-//
-//                    for (int i = 0; i < ARRAYSIZE; i++) {
-//                        for (int j = 0; j < ARRAYSIZE; j++) {
-//                            buttonArray[i][j].setOpaque(true);
-//                            buttonArray[i][j].setContentAreaFilled(true);
-//                            buttonArray[i][j].setBorderPainted(true);
-//                            buttonArray[i][j].setEnabled(true);
-//                        }
-//                    }
-//
-//
-//                }
-//
-////                }
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        } else {
-//            singlePlayerMove(source, indexPosition);
-//        }
-//
-//        myMove = false;
-//
-//    }
+
+    //method for when the user selects one of the buttons on the board
+    public void actionPerformed(ActionEvent evt) {
+        Object source = evt.getSource(); //finds the source of the objects that triggers the event
+        int indexPosition = (Integer) ((JComponent) evt.getSource()).getClientProperty("index"); //variable that represents the buttons 'index' (0-8)
+        singlePlayerMove(source, indexPosition);
+    }
 
     public void singlePlayerMove(Object source, int indexPosition) {
         boolean legalMove = false;
@@ -316,9 +226,11 @@ public class BoardNew extends JPanel {
                 buttonArray[i][j].setText("");
             }
 
-            // TODO change on type of game
-//            singlePlayerGame.reset();
-            out.println("RESET");
+            if (isMultiplayer) {
+                out.println("RESET");
+            } else {
+                singlePlayerGame.reset();
+            }
         }
     }
 

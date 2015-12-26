@@ -15,8 +15,6 @@ public class StartClass {
 		window.setPreferredSize(d);
 		window.setResizable(false);
 		window.pack();
-
-
 		window.setLocation(200,200);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setVisible(true);
