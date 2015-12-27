@@ -9,7 +9,7 @@ public class StartClass {
 
 	public static void main(String args[]) throws IOException {
 		JFrame window = new JFrame("Tic Tac Toe");
-		BoardNew content = new BoardNew();
+		Board content = new Board();
 		window.setContentPane(content);
 		Dimension d = new Dimension(600,600);
 		window.setPreferredSize(d);
